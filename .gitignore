@@ -3,7 +3,11 @@ Thumbs.db
 
 ## gradle
 /.gradle
+<<<<<<< HEAD
 /build/
+=======
+/build
+>>>>>>> 2a23424636ac6df1fa4ed2a907ad1fee5a49e2da
 
 ## ForgeGradle
 /run
@@ -14,7 +18,11 @@ Thumbs.db
 /.classpath
 /.project
 /eclipse
+<<<<<<< HEAD
 /bin/
+=======
+/bin
+>>>>>>> 2a23424636ac6df1fa4ed2a907ad1fee5a49e2da
 
 ## intellij
 /out
