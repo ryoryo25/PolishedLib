@@ -1,0 +1,16 @@
+[
+	{
+		"modid": "polishedlib",
+		"name": "PolishedLib",
+		"description": "This mod is library mod for my some mods.",
+		"version": "1.12.2-1.0.0",
+		"mcversion": "1.12.2",
+		"url": "Nothing",
+		"updateUrl": "Nothing",
+		"authorList": ["ryoryo"],
+		"credits": "Many minecraft modders!",
+		"logoFile": "assets/polishedlib/textures/mod_logo.png",
+		"screenshots": [],
+		"dependencies": ["mod_MinecraftForge"]
+	}
+]
