@@ -470,7 +470,7 @@ public class Utils
 	 * @param world
 	 * @return
 	 */
-	public static int getWorldTimeMinits(World world)
+	public static int getWorldTimeMinutes(World world)
 	{
 		return (int) (((world.getWorldInfo().getWorldTime() + 6000L) % 1000L) * 60L / 1000L);
 	}
