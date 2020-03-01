@@ -2,7 +2,7 @@ package ryoryo.polishedlib.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemArmor;
-import ryoryo.polishedlib.util.EnumArmorType;
+import ryoryo.polishedlib.util.enums.EnumArmorType;
 
 public class ItemBaseArmor extends ItemArmor
 {
