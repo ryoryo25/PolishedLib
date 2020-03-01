@@ -89,6 +89,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreIngredient;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import ryoryo.polishedlib.util.enums.EnumColor;
+import ryoryo.polishedlib.util.enums.EnumSimpleFacing;
 
 public class Utils
 {
@@ -1487,6 +1489,7 @@ public class Utils
 	 * @param blockColor
 	 * @param blocks
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void registerBlockColor(IBlockColor blockColor, Block... blocks)
 	{
 		if(isClient())
@@ -1499,6 +1502,7 @@ public class Utils
 	 * @param itemColor
 	 * @param items
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void registerItemColor(IItemColor itemColor, Item... items)
 	{
 		if(isClient())
@@ -1511,6 +1515,7 @@ public class Utils
 	 * @param itemColor
 	 * @param blocks
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void registerItemBlockColor(IItemColor itemColor, Block... blocks)
 	{
 		if(isClient())
@@ -1523,6 +1528,7 @@ public class Utils
 	 * @param entityClass
 	 * @param renderFactory
 	 */
+	@SideOnly(Side.CLIENT)
 	public static <T extends Entity> void registerEntityRendering(Class<T> entityClass, IRenderFactory<? super T> renderFactory)
 	{
 		if(isClient())
@@ -1533,6 +1539,7 @@ public class Utils
 	 * キー登録
 	 * @param key
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void registerKeyBinding(KeyBinding key)
 	{
 		if(isClient())
