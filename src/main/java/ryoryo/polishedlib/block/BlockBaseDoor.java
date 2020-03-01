@@ -17,8 +17,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import ryoryo.polishedlib.util.interfaces.IModId;
 
-public class BlockBaseDoor extends BlockDoor
+public abstract class BlockBaseDoor extends BlockDoor implements IModId
 {
 	private boolean wooden;
 	private boolean openable;
@@ -26,8 +27,8 @@ public class BlockBaseDoor extends BlockDoor
 	public BlockBaseDoor(Material material, String name, CreativeTabs tab, SoundType sound, boolean wooden, boolean openable)
 	{
 		super(material);
-		this.setCreativeTab(tab);
 		this.setUnlocalizedName(name + "_door");
+		this.setCreativeTab(tab);
 		this.setSoundType(sound);
 		this.wooden = wooden;
 		this.openable = openable;
