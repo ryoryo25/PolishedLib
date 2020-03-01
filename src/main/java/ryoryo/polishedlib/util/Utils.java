@@ -12,10 +12,6 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.common.collect.Multimap;
 
 import net.minecraft.advancements.Advancement;
@@ -89,14 +85,13 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreIngredient;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import ryoryo.polishedlib.PolishedLib;
 import ryoryo.polishedlib.util.enums.EnumColor;
 import ryoryo.polishedlib.util.enums.EnumSimpleFacing;
+import ryoryo.polishedlib.util.interfaces.IModId;
 
 public class Utils
 {
-	private static Logger logger = LogManager.getLogger(References.MOD_ID);
-	public static String mod_id = "";
-
 	//zero aabb
 	public static final AxisAlignedBB ZERO_AABB = creatAABB(0, 0, 0, 0, 0, 0);
 
@@ -240,126 +235,6 @@ public class Utils
 	public static String translatableStringFormatted(String key, Object... formats)
 	{
 		return I18n.translateToLocalFormatted(key, formats);
-	}
-
-	/**
-	 * ロガー
-	 *
-	 * @param event
-	 */
-	public static void addLog(String log)
-	{
-		logger.log(Level.OFF, log);
-	}
-
-	public static void addLog(Level lvl, String log)
-	{
-		logger.log(lvl, log);
-	}
-
-	public static void addLog(Level lvl, String log, Object... params)
-	{
-		logger.log(lvl, log, params);
-	}
-
-	public static void addLog(String log, Object... params)
-	{
-		logger.log(Level.OFF, log, params);
-	}
-
-	public static void addLogThrowable(Throwable e, String log)
-	{
-		logger.log(Level.OFF, log, e);
-	}
-
-	public static void addInfo(String info)
-	{
-		logger.info(info);
-	}
-
-	public static void addInfo(String info, Object... params)
-	{
-		logger.info(info, params);
-	}
-
-	public static void addInfoThrowable(Throwable e, String log)
-	{
-		logger.info(log, e);
-	}
-
-	public static void addWarn(String warn)
-	{
-		logger.warn(warn);
-	}
-
-	public static void addWarn(String warn, Object... params)
-	{
-		logger.warn(warn, params);
-	}
-
-	public static void addWarnThrowable(Throwable e, String log)
-	{
-		logger.warn(log, e);
-	}
-
-	public static void addTrace(String trace)
-	{
-		logger.trace(trace);
-	}
-
-	public static void addTrace(String trace, Object... params)
-	{
-		logger.trace(trace, params);
-	}
-
-	public static void addTraceThrowable(Throwable e, String log)
-	{
-		logger.trace(log, e);
-	}
-
-	public static void addFatal(String fatal)
-	{
-		logger.fatal(fatal);
-	}
-
-	public static void addFatal(String fatal, Object... params)
-	{
-		logger.fatal(fatal, params);
-	}
-
-	public static void addFatalThrowable(Throwable e, String log)
-	{
-		logger.fatal(log, e);
-	}
-
-	public static void addDebug(String debag)
-	{
-		logger.debug(debag);
-	}
-
-	public static void addDebug(String debag, Object... params)
-	{
-		logger.debug(debag, params);
-	}
-
-	public static void addDebugThrowable(Throwable e, String log)
-	{
-		logger.debug(log, e);
-	}
-
-	public static void addError(String error)
-	{
-		logger.error(error);
-	}
-
-	public static void addError(String error, Object... params)
-	{
-		logger.error(error, params);
-	}
-
-	public static void addErrorThrowable(Throwable e, String log)
-	{
-		logger.error(log, e);
 	}
 
 	/**
@@ -925,7 +800,7 @@ public class Utils
 			return true;
 		else
 		{
-			addInfo("The mod which have a " + oreName + " isn't installed.");
+			PolishedLib.logger.addInfo("The mod which have a " + oreName + " isn't installed.");
 			return false;
 		}
 	}
@@ -985,9 +860,9 @@ public class Utils
 	 * @param output
 	 * @param params
 	 */
-	public static void addRecipe(String name, ItemStack output, Object... params)
+	public static void addRecipe(String modId, String name, ItemStack output, Object... params)
 	{
-		addShapedRecipe(name, output, params);
+		addShapedRecipe(modId, name, output, params);
 	}
 
 	/**
@@ -996,9 +871,9 @@ public class Utils
 	 * @param output
 	 * @param params
 	 */
-	public static void addShapedRecipe(String name, @Nonnull ItemStack output, Object... params)
+	public static void addShapedRecipe(String modId, String name, @Nonnull ItemStack output, Object... params)
 	{
-		ResourceLocation location = makeModLocation(name);
+		ResourceLocation location = makeModLocation(modId, name);
 		ShapedOreRecipe ret = new ShapedOreRecipe(location, output, params);
 		ret.setRegistryName(location);
 		for(Ingredient ing : ret.getIngredients())
@@ -1015,9 +890,9 @@ public class Utils
 	 * @param output
 	 * @param params
 	 */
-	public static void addShapelessRecipe(String name, @Nonnull ItemStack output, Object... params)
+	public static void addShapelessRecipe(String modId, String name, @Nonnull ItemStack output, Object... params)
 	{
-		ResourceLocation location = makeModLocation(name);
+		ResourceLocation location = makeModLocation(modId, name);
 		ShapelessOreRecipe ret = new ShapelessOreRecipe(location, output, params);
 		ret.setRegistryName(location);
 		for(Ingredient ing : ret.getIngredients())
@@ -1035,9 +910,9 @@ public class Utils
 	 * @param output
 	 * @param material
 	 */
-	public static void addRecipeAxe(String name, ItemStack output, ItemStack material)
+	public static void addRecipeAxe(String modId, String name, ItemStack output, ItemStack material)
 	{
-		addRecipe("axe_" + name, output, "##", "#s", " s", 's', Items.STICK, '#', material);
+		addRecipe(modId, "axe_" + name, output, "##", "#s", " s", 's', Items.STICK, '#', material);
 	}
 
 	/**
@@ -1047,9 +922,9 @@ public class Utils
 	 * @param output
 	 * @param material
 	 */
-	public static void addRecipePickaxe(String name, ItemStack output, ItemStack material)
+	public static void addRecipePickaxe(String modId, String name, ItemStack output, ItemStack material)
 	{
-		addRecipe("pickaxe_" + name, output, "###", " s ", " s ", 's', Items.STICK, '#', material);
+		addRecipe(modId, "pickaxe_" + name, output, "###", " s ", " s ", 's', Items.STICK, '#', material);
 	}
 
 	/**
@@ -1059,9 +934,9 @@ public class Utils
 	 * @param output
 	 * @param material
 	 */
-	public static void addRecipeShovel(String name, ItemStack output, ItemStack material)
+	public static void addRecipeShovel(String modId, String name, ItemStack output, ItemStack material)
 	{
-		addRecipe("shovel_" + name, output, "#", "s", "s", 's', Items.STICK, '#', material);
+		addRecipe(modId, "shovel_" + name, output, "#", "s", "s", 's', Items.STICK, '#', material);
 	}
 
 	/**
@@ -1071,12 +946,12 @@ public class Utils
 	 * @param material
 	 * @param output
 	 */
-	public static void addRecipeTools(String name, ItemStack material, ItemStack... output)
+	public static void addRecipeTools(String modId, String name, ItemStack material, ItemStack... output)
 	{
 		assert(output.length == 3) : "完成品リストのサイズは3である必要があります";
-		addRecipeAxe(name, material, output[0]);
-		addRecipePickaxe(name, material, output[1]);
-		addRecipeShovel(name, material, output[2]);
+		addRecipeAxe(modId, name, material, output[0]);
+		addRecipePickaxe(modId, name, material, output[1]);
+		addRecipeShovel(modId, name, material, output[2]);
 	}
 
 	/**
@@ -1086,9 +961,9 @@ public class Utils
 	 * @param material
 	 * @param output
 	 */
-	public static void addRecipeSword(String name, ItemStack material, ItemStack output)
+	public static void addRecipeSword(String modId, String name, ItemStack material, ItemStack output)
 	{
-		addRecipe("sword_" + name, output, "#", "#", "s", 's', Items.STICK, '#', material);
+		addRecipe(modId, "sword_" + name, output, "#", "#", "s", 's', Items.STICK, '#', material);
 	}
 
 	/**
@@ -1098,13 +973,13 @@ public class Utils
 	 * @param material
 	 * @param output
 	 */
-	public static void addRecipeArmor(String name, ItemStack material, ItemStack... output)
+	public static void addRecipeArmor(String modId, String name, ItemStack material, ItemStack... output)
 	{
 		assert (output.length == 4) : "完成品リストのサイズは4である必要があります";
-		addRecipe("helmet_" + name, output[0], "###", "# #", '#', material);
-		addRecipe("chestplate_" + name, output[1], "# #", "###", "###", '#', material);
-		addRecipe("leggings_" + name, output[2], "###", "# #", "# #", '#', material);
-		addRecipe("boots_" + name, output[3], "# #", "# #", '#', material);
+		addRecipe(modId, "helmet_" + name, output[0], "###", "# #", '#', material);
+		addRecipe(modId, "chestplate_" + name, output[1], "# #", "###", "###", '#', material);
+		addRecipe(modId, "leggings_" + name, output[2], "###", "# #", "# #", '#', material);
+		addRecipe(modId, "boots_" + name, output[3], "# #", "# #", '#', material);
 	}
 
 	/**
@@ -1114,12 +989,12 @@ public class Utils
 	 * @param material
 	 * @param output
 	 */
-	public static void addRecipeAllToolsAndArmor(String name, ItemStack material, ItemStack... output)
+	public static void addRecipeAllToolsAndArmor(String modId, String name, ItemStack material, ItemStack... output)
 	{
 		assert (output.length == 8) : "完成品リストのサイズは8である必要があります";
-		addRecipeTools(name, material, Arrays.copyOfRange(output, 0, 2));
-		addRecipeSword(name, material, output[3]);
-		addRecipeArmor(name, material, Arrays.copyOfRange(output, 4, 8));
+		addRecipeTools(modId, name, material, Arrays.copyOfRange(output, 0, 2));
+		addRecipeSword(modId, name, material, output[3]);
+		addRecipeArmor(modId, name, material, Arrays.copyOfRange(output, 4, 8));
 	}
 
 	/**
@@ -1129,14 +1004,14 @@ public class Utils
 	 * @param material
 	 * @param output
 	 */
-	public static void addRecipeStairs(String name, Block output, ItemStack material)
+	public static void addRecipeStairs(String modId, String name, Block output, ItemStack material)
 	{
 		int quantity = 4;
 		if(ModCompat.COMPAT_QUARK)
 			quantity = 8;
 		else
-			addInfo("Quark isn't loaded.");
-		addRecipe("stairs_" + name, new ItemStack(output, quantity), "#  ", "## ", "###", '#', material);
+			PolishedLib.logger.addInfo("Quark isn't loaded.");
+		addRecipe(modId, "stairs_" + name, new ItemStack(output, quantity), "#  ", "## ", "###", '#', material);
 	}
 
 	/**
@@ -1146,14 +1021,14 @@ public class Utils
 	 * @param material
 	 * @param output
 	 */
-	public static void addMiniRecipeStairs(String name, Block output, ItemStack material)
+	public static void addMiniRecipeStairs(String modId, String name, Block output, ItemStack material)
 	{
 		int quantity = 2;
 		if(ModCompat.COMPAT_QUARK)
 			quantity = 4;
 		else
-			addInfo("Quark isn't loaded.");
-		addRecipe("stairs_" + name, new ItemStack(output, quantity), "# ", "##", '#', material);
+			PolishedLib.logger.addInfo("Quark isn't loaded.");
+		addRecipe(modId, "stairs_" + name, new ItemStack(output, quantity), "# ", "##", '#', material);
 	}
 
 	/**
@@ -1163,9 +1038,9 @@ public class Utils
 	 * @param output
 	 * @param material
 	 */
-	public static void addRecipeWall(String name, Block output, ItemStack material)
+	public static void addRecipeWall(String modId, String name, Block output, ItemStack material)
 	{
-		addRecipe("wall_" + name, new ItemStack(output, 6), "MMM", "MMM", 'M', material);
+		addRecipe(modId, "wall_" + name, new ItemStack(output, 6), "MMM", "MMM", 'M', material);
 	}
 
 	/**
@@ -1320,7 +1195,7 @@ public class Utils
 	 */
 	public static void registerBlock(Block block, String name)
 	{
-		ResourceLocation location = makeModLocation(name);
+		ResourceLocation location = makeModLocation((IModId) block, name);
 		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
 		ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
 
@@ -1340,7 +1215,7 @@ public class Utils
 	 */
 	public static void registerBlock(Block block, ItemBlock itemBlock, String name)
 	{
-		ResourceLocation location = makeModLocation(name);
+		ResourceLocation location = makeModLocation((IModId) block, name);
 		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
 		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
 
@@ -1409,7 +1284,7 @@ public class Utils
 	 */
 	public static void registerSmallStairs(Block block, String name)
 	{
-		ResourceLocation location = makeModLocation("small_stairs_" + name);
+		ResourceLocation location = new ResourceLocation(((IModId) block).getModId(), "small_stairs_" + name);
 		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
 		ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
 
@@ -1427,7 +1302,7 @@ public class Utils
 	 */
 	public static void registerItem(Item item, String name)
 	{
-		ResourceLocation location = makeModLocation(name);
+		ResourceLocation location = new ResourceLocation(((IModId) item).getModId(), name);
 		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
 
 		if(isClient())
@@ -1470,7 +1345,7 @@ public class Utils
 	 */
 	public static void registerItem(Item item, String name, int meta)
 	{
-		ResourceLocation location = makeModLocation(name);
+		ResourceLocation location = new ResourceLocation(((IModId) item).getModId(), name);
 		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
 
 		if(isClient())
@@ -1920,9 +1795,9 @@ public class Utils
 	 * @param updateFrequency
 	 * @param sendsVelocityUpdates
 	 */
-	public static void registerModEntity(Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
+	public static void registerModEntity(Class<? extends Entity> entityClass, String modId, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
 	{
-		EntityRegistry.registerModEntity(makeModLocation(entityName), entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
+		EntityRegistry.registerModEntity(makeModLocation(modId, entityName), entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
 	}
 
 	/**
@@ -2013,19 +1888,14 @@ public class Utils
 		}
 	}
 
-	/**
-	 * よく使うResourceLocationのやつ
-	 * @param name
-	 * @return
-	 */
-	public static ResourceLocation makeModLocation(String name)
+	public static ResourceLocation makeModLocation(String modId, String name)
 	{
-		return new ResourceLocation(mod_id, name);
+		return new ResourceLocation(modId, name);
 	}
 
-	public static void setModId(String id)
+	public static ResourceLocation makeModLocation(IModId modId, String name)
 	{
-		mod_id = id;
+		return makeModLocation(modId.getModId(), name);
 	}
 
 	/**
