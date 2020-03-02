@@ -10,9 +10,9 @@ public class References
 	public static final String MOD_ID = "polishedlib";
 	public static final String MOD_NAME = "PolishedLib";
 
-	public static final String MOD_VERSION_MAJOR = "1";
-	public static final String MOD_VERSION_MINOR = "0";
-	public static final String MOD_VERSION_PATCH = "0";
+	public static final String MOD_VERSION_MAJOR = "GRADLE.VERSION_MAJOR";
+	public static final String MOD_VERSION_MINOR = "GRADLE.VERSION_MINOR";
+	public static final String MOD_VERSION_PATCH = "GRADLE.VERSION_PATCH";
 	public static final String MOD_VERSION = MOD_VERSION_MAJOR + "." + MOD_VERSION_MINOR + "." + MOD_VERSION_PATCH;
 
 	public static final String MOD_DEPENDENCIES = "";
