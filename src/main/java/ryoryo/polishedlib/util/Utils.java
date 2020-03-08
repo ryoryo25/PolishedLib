@@ -1277,24 +1277,6 @@ public class Utils
 	}
 
 	/**
-	 * 小階段登録
-	 *
-	 * @param block
-	 * @param name
-	 */
-	public static void registerSmallStairs(Block block, String name)
-	{
-		ResourceLocation location = new ResourceLocation(((IModId) block).getModId(), "small_stairs_" + name);
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
-		ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-
-		if(isClient())
-		{
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(location, "inventory"));
-		}
-	}
-
-	/**
 	 * ノーマルアイテム登録
 	 *
 	 * @param item
@@ -1302,7 +1284,7 @@ public class Utils
 	 */
 	public static void registerItem(Item item, String name)
 	{
-		ResourceLocation location = new ResourceLocation(((IModId) item).getModId(), name);
+		ResourceLocation location = makeModLocation((IModId) item, name);
 		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
 
 		if(isClient())
@@ -1345,7 +1327,7 @@ public class Utils
 	 */
 	public static void registerItem(Item item, String name, int meta)
 	{
-		ResourceLocation location = new ResourceLocation(((IModId) item).getModId(), name);
+		ResourceLocation location = makeModLocation((IModId) item, name);
 		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
 
 		if(isClient())
