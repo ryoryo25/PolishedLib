@@ -10,7 +10,7 @@ public class ModLogger
 
 	public ModLogger(String modId)
 	{
-		logger = LogManager.getLogger(References.MOD_ID);
+		logger = LogManager.getLogger(modId);
 	}
 
 	/**
