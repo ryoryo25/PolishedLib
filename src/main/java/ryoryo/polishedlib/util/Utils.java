@@ -1914,7 +1914,7 @@ public class Utils
 			return MathHelper.rgb(color[0] / 255F, color[1] / 255F, color[2] / 255F);
 		}
 
-		return EnumColor.RED.getColorHex();
+		return EnumColor.RED.getColorValue();
 	}
 
 	/**
