@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.Multimap;
 
 import net.minecraft.advancements.Advancement;
@@ -24,8 +22,6 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.settings.KeyBinding;
@@ -42,12 +38,10 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -57,14 +51,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -73,7 +65,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.IFuelHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -82,13 +73,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.OreIngredient;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import ryoryo.polishedlib.PolishedLib;
 import ryoryo.polishedlib.util.enums.EnumColor;
 import ryoryo.polishedlib.util.enums.EnumSimpleFacing;
-import ryoryo.polishedlib.util.interfaces.IModId;
 
 public class Utils
 {
@@ -204,16 +191,6 @@ public class Utils
 		addChatFormatted(getPlayer(), message, args);
 	}
 
-	public static void addChatModInfo(EntityPlayer player, String message)
-	{
-		player.sendMessage(new TextComponentString(TextFormatting.BLUE + "" + TextFormatting.BOLD + "[PolishedStone V2]:" + TextFormatting.RESET + " " + message));
-	}
-
-	public static void addChatModInfo(String message)
-	{
-		addChatModInfo(getPlayer(), message);
-	}
-
 	/**
 	 * 翻訳
 	 *
@@ -236,220 +213,6 @@ public class Utils
 	{
 		return I18n.translateToLocalFormatted(key, formats);
 	}
-
-	/**
-	 * 小数をパーセントに変換
-	 *
-	 * @param base
-	 * @return
-	 */
-	public static float decimalToPercent(float base)
-	{
-		return base * 100F;
-	}
-
-	/**
-	 * 小数をパーミルに変換
-	 *
-	 * @param base
-	 * @return
-	 */
-	public static float decimalToPermil(float base)
-	{
-		return base * 1000F;
-	}
-
-	/**
-	 * パーセントを通常の小数に変換
-	 *
-	 * @param percent
-	 * @return
-	 */
-	public static float percentToDecimal(float percent)
-	{
-		return percent / 100F;
-	}
-
-	/**
-	 * パーミルを通常の小数に変換
-	 *
-	 * @param permil
-	 * @return
-	 */
-	public static float permilToDecimal(float permil)
-	{
-		return permil / 1000F;
-	}
-
-	/**
-	 * tickを秒に
-	 *
-	 * @param tick
-	 * @return
-	 */
-	public static float tickToSecond(float tick)
-	{
-		return tick / 20F;
-	}
-
-	/**
-	 * tickを分に
-	 *
-	 * @param tick
-	 * @return
-	 */
-	public static float tickToMinute(float tick)
-	{
-		return tickToSecond(tick) / 60;
-	}
-
-	/**
-	 * 秒をtickに
-	 *
-	 * @param second
-	 * @return
-	 */
-	public static float secondToTick(float second)
-	{
-		return second * 20F;
-	}
-
-	public static float minuteToTick(float minute)
-	{
-		return secondToTick(minute * 60F);
-	}
-
-	/**
-	 * ワールド時間の経過日数を得る（ワールド生成時を0日目6:00とし、24:00で1日経過として計算）
-	 *
-	 * @param world
-	 * @return
-	 */
-	public static int getWorldTimeDay(World world)
-	{
-		return (int) ((world.getWorldInfo().getWorldTime() + 6000L) / 24000L);
-	}
-
-	/**
-	 * ワールド時刻の時を得る（起床時間を6時として計算）
-	 *
-	 * @param world
-	 * @return
-	 */
-	public static int getWorldTimeHour(World world)
-	{
-		return (int) (((world.getWorldInfo().getWorldTime() + 6000L) % 24000L) / 1000L);
-	}
-
-	/**
-	 * ワールド時刻の分を得る（起床時間を6時として計算）
-	 *
-	 * @param world
-	 * @return
-	 */
-	public static int getWorldTimeMinutes(World world)
-	{
-		return (int) (((world.getWorldInfo().getWorldTime() + 6000L) % 1000L) * 60L / 1000L);
-	}
-
-	// /**
-	// * 指定された定型／不定形レシピを削除する。レシピの指定は厳密に判定される。
-	// * 例）ダイヤつるはしのレシピを削除する場合
-	// * {@code
-	// * ItemStack dia = new ItemStack(Item.diamond);
-	// * ItemStack stick = new ItemStack(Item.stick);
-	// * removeRecipe(new ItemStack(Item.pickaxeDiamond), dia, dia, dia, null,
-	// stick, null, null, stick, null);
-	// * }
-	// * return 削除されたアイテムがあればtrue
-	// * @since 1.6, 1.7
-	// */
-	// public static boolean removeRecipe(ItemStack output, ItemStack... stacks)
-	// {
-	// assert (stacks.length == 9): "removeRecipe: stacksのサイズは9である必要があります。";
-	// DummyInventoryCrafting inv = new DummyInventoryCrafting(stacks);
-	// List recipes = CraftingManager.getInstance().getRecipeList();
-	// for (int i = 0; i < recipes.size(); ++i)
-	// {
-	// IRecipe recipe = (IRecipe)recipes.get(i);
-	// if (recipe.matches(inv) && recipe.getRecipeOutput().isStackEqual(output))
-	// {
-	// recipes.remove(i);
-	// addLogFinest("removeRecipe: %s x %d のレシピを削除しました。",
-	// output.getItem().getItemDisplayName(output), output.stackSize);
-	// return true;
-	// }
-	// }
-	// addLogWarning("removeRecipe error: %s x %d のレシピが存在しません。",
-	// output.getItem().getItemDisplayName(output), output.stackSize);
-	// return false;
-	// }
-	//
-	// /**
-	// * 指定されたアイテムを作るためのレシピを全て削除する。
-	// * @since 1.7
-	// */
-	// public static boolean removeRecipe(ItemStack output)
-	// {
-	// Iterator itr = CraftingManager.getInstance().getRecipeList().iterator();
-	// boolean result = false;
-	// while(itr.hasNext())
-	// {
-	// Object obj = itr.next();
-	// if(obj instanceof ShapedRecipes || obj instanceof ShapelessRecipes)
-	// {
-	// IRecipe recipe = (IRecipe)obj;
-	// if(output.isItemEqual(recipe.getRecipeOutput()))
-	// {
-	// itr.remove();
-	// result = true;
-	// addLogFinest("removeRecipe: %s x %d のレシピを削除しました。",
-	// output.getItem().getItemDisplayName(output), output.stackSize);
-	// }
-	// }
-	// }
-	// if(!result) addLogWarning("removeRecipe error: %s x %d のレシピが存在しません。",
-	// output.getItem().getItemDisplayName(output), output.stackSize);
-	// return result;
-	// }
-	//
-	// /**
-	// * 指定されたアイテムの精錬レシピを削除する。
-	// * @since 1.12.150602
-	// */
-	// public static boolean removeSmelting(int id)
-	// {
-	// if(FurnaceRecipes.smelting().getSmeltingList().containsKey(Integer.valueOf(id)))
-	// {
-	// FurnaceRecipes.smelting().getSmeltingList().remove(id);
-	// return true;
-	// }
-	// return false;
-	// }
-	//
-	// /**
-	// * 指定されたアイテムの精錬レシピを削除する。
-	// * @since 1.12.150602
-	// */
-	// public static boolean removeSmelting(int id, int meta)
-	// {
-	// if(FurnaceRecipes.smelting().getSmeltingResult(new ItemStack(id, 1,
-	// meta)) != null)
-	// {
-	// try
-	// {
-	// Field forgeMetadataSmelting =
-	// FurnaceRecipes.class.getDeclaredField("metaSmeltingList");
-	// forgeMetadataSmelting.setAccessible(true);
-	// Map recipes = (Map)forgeMetadataSmelting.get(FurnaceRecipes.smelting());
-	// recipes.remove(Arrays.asList(id, meta));
-	// return true;
-	// }
-	// catch(NoSuchFieldException e){}
-	// catch(IllegalAccessException e){}
-	// }
-	// return false;
-	// }
 
 	/*
 	 * Moddingメモ Entity.rotationYaw 南0° 西90° 北180° 東270° Entity.rotationPitch
@@ -718,7 +481,6 @@ public class Utils
 	 */
 	public static void removeRecipe(ItemStack output)
 	{
-//	 List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
 		Iterator<IRecipe> remover = ForgeRegistries.RECIPES.iterator();
 
 		while(remover.hasNext())
@@ -726,9 +488,7 @@ public class Utils
 			ItemStack itemStack = remover.next().getRecipeOutput();
 
 			if(itemStack != null && output.isItemEqual(itemStack))
-			{
 				remover.remove();
-			}
 		}
 	}
 
@@ -768,21 +528,34 @@ public class Utils
 	 * @param burnTime
 	 * @param fuels
 	 */
+//	public static void addFuel(int burnTime, ItemStack... fuels)
+//	{
+//		GameRegistry.registerFuelHandler(new IFuelHandler()
+//		{
+//			@Override
+//			public int getBurnTime(ItemStack fuel)
+//			{
+//				for(ItemStack toAdd : fuels)
+//				{
+//					if(fuel.isItemEqual(toAdd))
+//						return burnTime;
+//				}
+//
+//				return 0;
+//			}
+//		});
+//	}
 	public static void addFuel(int burnTime, ItemStack... fuels)
 	{
-		GameRegistry.registerFuelHandler(new IFuelHandler()
+		GameRegistry.registerFuelHandler(fuel ->
 		{
-			public int getBurnTime(ItemStack itemStack)
+			for(ItemStack toAdd : fuels)
 			{
-				for(ItemStack add : fuels)
-				{
-					if(add != null && itemStack.isItemEqual(add))
-					{
-						return burnTime;
-					}
-				}
-				return 0;
+				if(fuel.isItemEqual(toAdd))
+					return burnTime;
 			}
+
+			return 0;
 		});
 	}
 
@@ -827,6 +600,7 @@ public class Utils
 	{
 		String[] oredicts = OreDictionary.getOreNames();
 		List<ItemStack> result = new ArrayList<ItemStack>();
+
 		try
 		{
 			for(int oreId : OreDictionary.getOreIDs(stack))
@@ -845,202 +619,11 @@ public class Utils
 			}
 
 		}
-		catch(IllegalArgumentException e)
-		{
-		}
 		catch(NullPointerException e)
 		{
 		}
+
 		return result;
-	}
-
-	/**
-	 * jsonでレシピ登録とかめんどいから前みたいにできるように
-	 * @param name
-	 * @param output
-	 * @param params
-	 */
-	public static void addRecipe(String modId, String name, ItemStack output, Object... params)
-	{
-		addShapedRecipe(modId, name, output, params);
-	}
-
-	/**
-	 * jsonでレシピ登録とかめんどいから前みたいにできるように
-	 * @param name
-	 * @param output
-	 * @param params
-	 */
-	public static void addShapedRecipe(String modId, String name, @Nonnull ItemStack output, Object... params)
-	{
-		ResourceLocation location = makeModLocation(modId, name);
-		ShapedOreRecipe ret = new ShapedOreRecipe(location, output, params);
-		ret.setRegistryName(location);
-		for(Ingredient ing : ret.getIngredients())
-		{
-			if(ing instanceof OreIngredient && ing.getMatchingStacks().length < 1)
-				return;
-		}
-		ForgeRegistries.RECIPES.register(ret);
-	}
-
-	/**
-	 * jsonでレシピ登録とかめんどいから前みたいにできるようにするやつのshapeless版
-	 * @param name
-	 * @param output
-	 * @param params
-	 */
-	public static void addShapelessRecipe(String modId, String name, @Nonnull ItemStack output, Object... params)
-	{
-		ResourceLocation location = makeModLocation(modId, name);
-		ShapelessOreRecipe ret = new ShapelessOreRecipe(location, output, params);
-		ret.setRegistryName(location);
-		for(Ingredient ing : ret.getIngredients())
-		{
-			if(ing instanceof OreIngredient && ing.getMatchingStacks().length < 1)
-				return;
-		}
-		ForgeRegistries.RECIPES.register(ret);
-	}
-
-	/**
-	 * 斧レシピの登録
-	 * 名前の前に"axe_"と足される
-	 *
-	 * @param output
-	 * @param material
-	 */
-	public static void addRecipeAxe(String modId, String name, ItemStack output, ItemStack material)
-	{
-		addRecipe(modId, "axe_" + name, output, "##", "#s", " s", 's', Items.STICK, '#', material);
-	}
-
-	/**
-	 * つるはしレシピの登録
-	 * 名前の前に"pickaxe_"と足される
-	 *
-	 * @param output
-	 * @param material
-	 */
-	public static void addRecipePickaxe(String modId, String name, ItemStack output, ItemStack material)
-	{
-		addRecipe(modId, "pickaxe_" + name, output, "###", " s ", " s ", 's', Items.STICK, '#', material);
-	}
-
-	/**
-	 * ショベルレシピの登録
-	 * 名前の前に"shovel_"と足される
-	 *
-	 * @param output
-	 * @param material
-	 */
-	public static void addRecipeShovel(String modId, String name, ItemStack output, ItemStack material)
-	{
-		addRecipe(modId, "shovel_" + name, output, "#", "s", "s", 's', Items.STICK, '#', material);
-	}
-
-	/**
-	 * ツール3種レシピの一括登録（斧、つるはし、ショベル）
-	 * 名前の前にそれぞれ"axe_"、"pickaxe_"、"shovel_"と足される
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public static void addRecipeTools(String modId, String name, ItemStack material, ItemStack... output)
-	{
-		assert(output.length == 3) : "完成品リストのサイズは3である必要があります";
-		addRecipeAxe(modId, name, material, output[0]);
-		addRecipePickaxe(modId, name, material, output[1]);
-		addRecipeShovel(modId, name, material, output[2]);
-	}
-
-	/**
-	 * 剣レシピの登録
-	 * 名前の前に"sword_"と足される
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public static void addRecipeSword(String modId, String name, ItemStack material, ItemStack output)
-	{
-		addRecipe(modId, "sword_" + name, output, "#", "#", "s", 's', Items.STICK, '#', material);
-	}
-
-	/**
-	 * 防具4種レシピの一括登録（ヘルメット、チェストプレート、レギンス、ブーツ）
-	 * 名前の前にそれぞれ"helmet_"、"chestplate_"、"leggings_"、"boots_"と足される
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public static void addRecipeArmor(String modId, String name, ItemStack material, ItemStack... output)
-	{
-		assert (output.length == 4) : "完成品リストのサイズは4である必要があります";
-		addRecipe(modId, "helmet_" + name, output[0], "###", "# #", '#', material);
-		addRecipe(modId, "chestplate_" + name, output[1], "# #", "###", "###", '#', material);
-		addRecipe(modId, "leggings_" + name, output[2], "###", "# #", "# #", '#', material);
-		addRecipe(modId, "boots_" + name, output[3], "# #", "# #", '#', material);
-	}
-
-	/**
-	 * ツール3種、剣、防具4種レシピの一括登録
-	 * 名前の前にそれぞれ"axe_"、"pickaxe_"、"shovel_"、"sword_"、"helmet_"、"chestplate_"、"leggings_"、"boots_"と足される
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public static void addRecipeAllToolsAndArmor(String modId, String name, ItemStack material, ItemStack... output)
-	{
-		assert (output.length == 8) : "完成品リストのサイズは8である必要があります";
-		addRecipeTools(modId, name, material, Arrays.copyOfRange(output, 0, 2));
-		addRecipeSword(modId, name, material, output[3]);
-		addRecipeArmor(modId, name, material, Arrays.copyOfRange(output, 4, 8));
-	}
-
-	/**
-	 * 階段レシピ登録
-	 * 名前の前に"stairs_"と足される
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public static void addRecipeStairs(String modId, String name, Block output, ItemStack material)
-	{
-		int quantity = 4;
-		if(ModCompat.COMPAT_QUARK)
-			quantity = 8;
-		else
-			PolishedLib.LOGGER.info("Quark isn't loaded.");
-		addRecipe(modId, "stairs_" + name, new ItemStack(output, quantity), "#  ", "## ", "###", '#', material);
-	}
-
-	/**
-	 * 階段を手元で作れるようにレシピ登録
-	 * 名前の前に"stairs_"と足される
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public static void addMiniRecipeStairs(String modId, String name, Block output, ItemStack material)
-	{
-		int quantity = 2;
-		if(ModCompat.COMPAT_QUARK)
-			quantity = 4;
-		else
-			PolishedLib.LOGGER.info("Quark isn't loaded.");
-		addRecipe(modId, "stairs_" + name, new ItemStack(output, quantity), "# ", "##", '#', material);
-	}
-
-	/**
-	 * 壁のレシピ登録
-	 * 名前の前に"wall_"と足される
-	 * @param name
-	 * @param output
-	 * @param material
-	 */
-	public static void addRecipeWall(String modId, String name, Block output, ItemStack material)
-	{
-		addRecipe(modId, "wall_" + name, new ItemStack(output, 6), "MMM", "MMM", 'M', material);
 	}
 
 	/**
@@ -1185,159 +768,6 @@ public class Utils
 	public static boolean isClient()
 	{
 		return FMLCommonHandler.instance().getSide().isClient();
-	}
-
-	/**
-	 * ブロック登録
-	 *
-	 * @param block
-	 * @param location
-	 */
-	public static void registerBlock(Block block, String name)
-	{
-		ResourceLocation location = makeModLocation((IModId) block, name);
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
-		ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-
-		if(isClient())
-		{
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(location, "inventory"));
-		}
-	}
-
-	/**
-	 * ブロック登録
-	 * アイテムブロックを別に作成時用
-	 *
-	 * @param block
-	 * @param itemBlock
-	 * @param name
-	 */
-	public static void registerBlock(Block block, ItemBlock itemBlock, String name)
-	{
-		ResourceLocation location = makeModLocation((IModId) block, name);
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
-		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
-
-		if(isClient())
-		{
-			ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(location, "inventory"));
-		}
-	}
-
-	/**
-	 * ブロック登録
-	 * meta違いで名前も変えたいとき用
-	 *
-	 * @param block
-	 * @param itemBlock
-	 * @param location
-	 * @param meta
-	 * @param locations
-	 * @param names
-	 */
-	public static void registerBlock(Block block, ItemBlock itemBlock, ResourceLocation location, int meta, ResourceLocation[] locations, String... names)
-	{
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
-		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
-
-		if(isClient() && names.length > 0)
-		{
-			ModelBakery.registerItemVariants(Item.getItemFromBlock(block), locations);
-			for(int i = 0; i < meta; i++)
-			{
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(location.toString() + "_" + names[i], "inventory"));
-			}
-		}
-	}
-
-	/**
-	 * ブロック登録
-	 * meta違いで数字で違う名前にする用
-	 *
-	 * @param block
-	 * @param itemBlock
-	 * @param location
-	 * @param meta
-	 * @param locations
-	 */
-	public static void registerBlock(Block block, ItemBlock itemBlock, ResourceLocation location, int meta, ResourceLocation[] locations)
-	{
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
-		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
-
-		if(isClient())
-		{
-			ModelBakery.registerItemVariants(Item.getItemFromBlock(block), locations);
-			for(int i = 0; i < meta; i++)
-			{
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(location.toString() + "_" + i, "inventory"));
-			}
-		}
-	}
-
-	/**
-	 * ノーマルアイテム登録
-	 *
-	 * @param item
-	 * @param name
-	 */
-	public static void registerItem(Item item, String name)
-	{
-		ResourceLocation location = makeModLocation((IModId) item, name);
-		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
-
-		if(isClient())
-		{
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(location, "inventory"));
-		}
-	}
-
-	/**
-	 * アイテム登録
-	 * meta違いでテクスチャを変える用
-	 *
-	 * @param item
-	 * @param location
-	 * @param meta
-	 * @param locations
-	 * @param names
-	 */
-	public static void registerItem(Item item, ResourceLocation location, int meta, ResourceLocation[] locations, String... names)
-	{
-		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
-
-		if(isClient() && names.length > 0)
-		{
-			ModelBakery.registerItemVariants(item, locations);
-			for(int i = 0; i < meta; i++)
-			{
-				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(location.toString() + "_" + names[i], "inventory"));
-			}
-		}
-	}
-
-	/**
-	 * アイテム登録
-	 * meta違いだけど同じテクスチャ用
-	 *
-	 * @param item
-	 * @param name
-	 * @param meta
-	 */
-	public static void registerItem(Item item, String name, int meta)
-	{
-		ResourceLocation location = makeModLocation((IModId) item, name);
-		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
-
-		if(isClient())
-		{
-			ModelBakery.registerItemVariants(item, location);
-			for(int i = 0; i < meta; i++)
-			{
-				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(location.toString(), "inventory"));
-			}
-		}
 	}
 
 	/**
@@ -1768,21 +1198,6 @@ public class Utils
 	}
 
 	/**
-	 * デフォルトの登録処理を簡略化
-	 * @param entityClass
-	 * @param entityName
-	 * @param id
-	 * @param mod
-	 * @param trackingRange
-	 * @param updateFrequency
-	 * @param sendsVelocityUpdates
-	 */
-	public static void registerModEntity(Class<? extends Entity> entityClass, String modId, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
-	{
-		EntityRegistry.registerModEntity(makeModLocation(modId, entityName), entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
-	}
-
-	/**
 	 * サブブロック登録を簡略化
 	 * @param block
 	 * @param firstMeta
@@ -1873,11 +1288,6 @@ public class Utils
 	public static ResourceLocation makeModLocation(String modId, String name)
 	{
 		return new ResourceLocation(modId, name);
-	}
-
-	public static ResourceLocation makeModLocation(IModId modId, String name)
-	{
-		return makeModLocation(modId.getModId(), name);
 	}
 
 	/**
