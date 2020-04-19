@@ -1,5 +1,8 @@
 package ryoryo.polishedlib;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -9,7 +12,6 @@ import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import ryoryo.polishedlib.proxy.CommonProxy;
-import ryoryo.polishedlib.util.ModLogger;
 import ryoryo.polishedlib.util.References;
 
 @Mod(modid = References.MOD_ID, name = References.MOD_NAME, version = References.MOD_VERSION, dependencies = References.MOD_DEPENDENCIES, acceptedMinecraftVersions = References.MOD_ACCEPTED_MC_VERSIONS, useMetadata = true, guiFactory = References.MOD_GUI_FACTORY)
@@ -21,7 +23,7 @@ public class PolishedLib
 	@SidedProxy(clientSide=References.PROXY_CLIENT, serverSide=References.PROXY_COMMON)
 	public static CommonProxy proxy;
 
-	public static ModLogger logger = new ModLogger(References.MOD_ID);
+	public static final Logger LOGGER = LogManager.getLogger(References.MOD_ID);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)

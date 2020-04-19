@@ -800,7 +800,7 @@ public class Utils
 			return true;
 		else
 		{
-			PolishedLib.logger.addInfo("The mod which have a " + oreName + " isn't installed.");
+			PolishedLib.LOGGER.info("The mod which have a " + oreName + " isn't installed.");
 			return false;
 		}
 	}
@@ -1010,7 +1010,7 @@ public class Utils
 		if(ModCompat.COMPAT_QUARK)
 			quantity = 8;
 		else
-			PolishedLib.logger.addInfo("Quark isn't loaded.");
+			PolishedLib.LOGGER.info("Quark isn't loaded.");
 		addRecipe(modId, "stairs_" + name, new ItemStack(output, quantity), "#  ", "## ", "###", '#', material);
 	}
 
@@ -1027,7 +1027,7 @@ public class Utils
 		if(ModCompat.COMPAT_QUARK)
 			quantity = 4;
 		else
-			PolishedLib.logger.addInfo("Quark isn't loaded.");
+			PolishedLib.LOGGER.info("Quark isn't loaded.");
 		addRecipe(modId, "stairs_" + name, new ItemStack(output, quantity), "# ", "##", '#', material);
 	}
 
