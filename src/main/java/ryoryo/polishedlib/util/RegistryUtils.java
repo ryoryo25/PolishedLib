@@ -37,7 +37,7 @@ public class RegistryUtils
 	 * @param output
 	 * @param params
 	 */
-	public void addRecipe(String name, ItemStack output, Object... params)
+	public void addRecipe(String name, @Nonnull ItemStack output, Object... params)
 	{
 		addShapedRecipe(name, output, params);
 	}
@@ -78,6 +78,21 @@ public class RegistryUtils
 				return;
 		}
 		ForgeRegistries.RECIPES.register(ret);
+	}
+
+	public void addRecipeAutoName(@Nonnull ItemStack output, Object... params)
+	{
+		addShapedRecipeAutoName(output, params);
+	}
+
+	public void addShapedRecipeAutoName(@Nonnull ItemStack output, Object... params)
+	{
+		addRecipe(new RecipeNameBuilder(output, params).build(), output, params);
+	}
+
+	public void addShapelessRecipeAutoName(@Nonnull ItemStack output, Object... params)
+	{
+		addShapelessRecipe(new RecipeNameBuilder(output, params).build(), output, params);
 	}
 
 	/**
