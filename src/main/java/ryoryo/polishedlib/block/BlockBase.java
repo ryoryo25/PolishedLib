@@ -4,9 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import ryoryo.polishedlib.util.interfaces.IModId;
 
-public abstract class BlockBase extends Block implements IModId
+public class BlockBase extends Block
 {
 	public BlockBase(Material material, String name)
 	{

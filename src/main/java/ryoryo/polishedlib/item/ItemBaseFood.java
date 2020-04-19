@@ -3,9 +3,8 @@ package ryoryo.polishedlib.item;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import ryoryo.polishedlib.util.interfaces.IModId;
 
-public abstract class ItemBaseFood extends ItemFood implements IModId
+public class ItemBaseFood extends ItemFood
 {
 	private int eatSpeed = 32;
 

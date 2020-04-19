@@ -2,9 +2,8 @@ package ryoryo.polishedlib.block;
 
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
-import ryoryo.polishedlib.util.interfaces.IModId;
 
-public abstract class BlockBaseStairs extends BlockStairs implements IModId
+public class BlockBaseStairs extends BlockStairs
 {
 	public BlockBaseStairs(IBlockState modelState)
 	{

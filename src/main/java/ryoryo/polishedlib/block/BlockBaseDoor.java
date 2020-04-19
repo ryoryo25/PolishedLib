@@ -17,9 +17,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import ryoryo.polishedlib.util.interfaces.IModId;
 
-public abstract class BlockBaseDoor extends BlockDoor implements IModId
+public class BlockBaseDoor extends BlockDoor
 {
 	private boolean wooden;
 	private boolean openable;

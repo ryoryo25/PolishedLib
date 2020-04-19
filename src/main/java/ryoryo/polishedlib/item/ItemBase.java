@@ -9,10 +9,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import ryoryo.polishedlib.util.interfaces.IModId;
 import ryoryo.polishedlib.util.interfaces.ITooltipWiki;
 
-public abstract class ItemBase extends Item implements IModId
+public class ItemBase extends Item
 {
 	public ItemBase(String name, CreativeTabs tab)
 	{

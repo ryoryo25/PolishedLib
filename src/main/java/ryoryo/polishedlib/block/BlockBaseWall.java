@@ -13,9 +13,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import ryoryo.polishedlib.util.interfaces.IModId;
 
-public abstract class BlockBaseWall extends BlockWall implements IModId
+public class BlockBaseWall extends BlockWall
 {
 	public BlockBaseWall(Block baseBlock)
 	{
