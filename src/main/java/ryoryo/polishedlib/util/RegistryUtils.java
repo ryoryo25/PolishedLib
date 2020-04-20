@@ -5,7 +5,6 @@ import java.util.Arrays;
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
@@ -239,18 +238,15 @@ public class RegistryUtils
 	 * ブロック登録
 	 *
 	 * @param block
-	 * @param location
+	 * @param name
 	 */
 	public void registerBlock(Block block, String name)
 	{
-		ResourceLocation location = Utils.makeModLocation(this.modId, name);
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
+		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
 		ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
 
 		if(Utils.isClient())
-		{
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(location, "inventory"));
-		}
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
 	}
 
 	/**
@@ -263,14 +259,11 @@ public class RegistryUtils
 	 */
 	public void registerBlock(Block block, ItemBlock itemBlock, String name)
 	{
-		ResourceLocation location = Utils.makeModLocation(this.modId, name);
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
+		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
 		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
 
 		if(Utils.isClient())
-		{
-			ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(location, "inventory"));
-		}
+			ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
 	}
 
 	/**
@@ -280,22 +273,17 @@ public class RegistryUtils
 	 * @param block
 	 * @param itemBlock
 	 * @param location
-	 * @param meta
-	 * @param locations
 	 * @param names
 	 */
-	public void registerBlock(Block block, ItemBlock itemBlock, ResourceLocation location, int meta, ResourceLocation[] locations, String... names)
+	public void registerBlock(Block block, ItemBlock itemBlock, String name, String[] names)
 	{
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
+		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
 		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
 
-		if(Utils.isClient() && names.length > 0)
+		if(Utils.isClient())
 		{
-			ModelBakery.registerItemVariants(Item.getItemFromBlock(block), locations);
-			for(int i = 0; i < meta; i++)
-			{
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(location.toString() + "_" + names[i], "inventory"));
-			}
+			for(int i = 0; i < names.length; i++)
+				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(block.getRegistryName().toString() + "_" + names[i], "inventory"));
 		}
 	}
 
@@ -307,20 +295,16 @@ public class RegistryUtils
 	 * @param itemBlock
 	 * @param location
 	 * @param meta
-	 * @param locations
 	 */
-	public void registerBlock(Block block, ItemBlock itemBlock, ResourceLocation location, int meta, ResourceLocation[] locations)
+	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta)
 	{
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(location));
+		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
 		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
 
 		if(Utils.isClient())
 		{
-			ModelBakery.registerItemVariants(Item.getItemFromBlock(block), locations);
 			for(int i = 0; i < meta; i++)
-			{
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(location.toString() + "_" + i, "inventory"));
-			}
+				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(block.getRegistryName().toString() + "_" + i, "inventory"));
 		}
 	}
 
@@ -332,13 +316,10 @@ public class RegistryUtils
 	 */
 	public void registerItem(Item item, String name)
 	{
-		ResourceLocation location = Utils.makeModLocation(this.modId, name);
-		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
+		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
 
 		if(Utils.isClient())
-		{
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(location, "inventory"));
-		}
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 
 	/**
@@ -347,21 +328,16 @@ public class RegistryUtils
 	 *
 	 * @param item
 	 * @param location
-	 * @param meta
-	 * @param locations
 	 * @param names
 	 */
-	public void registerItem(Item item, ResourceLocation location, int meta, ResourceLocation[] locations, String... names)
+	public void registerItem(Item item, String name, String[] names)
 	{
-		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
+		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
 
-		if(Utils.isClient() && names.length > 0)
+		if(Utils.isClient())
 		{
-			ModelBakery.registerItemVariants(item, locations);
-			for(int i = 0; i < meta; i++)
-			{
-				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(location.toString() + "_" + names[i], "inventory"));
-			}
+			for(int i = 0; i < names.length; i++)
+				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName().toString() + "_" + names[i], "inventory"));
 		}
 	}
 
@@ -375,21 +351,18 @@ public class RegistryUtils
 	 */
 	public void registerItem(Item item, String name, int meta)
 	{
-		ResourceLocation location = Utils.makeModLocation(this.modId, name);
-		ForgeRegistries.ITEMS.register(item.setRegistryName(location));
+		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
 
 		if(Utils.isClient())
 		{
-			ModelBakery.registerItemVariants(item, location);
 			for(int i = 0; i < meta; i++)
-			{
-				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(location.toString(), "inventory"));
-			}
+				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName().toString(), "inventory"));
 		}
 	}
 
 	/**
 	 * デフォルトの登録処理を簡略化
+	 *
 	 * @param entityClass
 	 * @param entityName
 	 * @param id

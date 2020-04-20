@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import com.google.common.collect.Multimap;
 
-import net.minecraft.advancements.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.BlockHorizontal;
@@ -578,6 +577,12 @@ public class Utils
 		}
 	}
 
+	/**
+	 * 指定した鉱石辞書名のアイテムがあるか調べで，あればそのうちの1つを返す
+	 *
+	 * @param oreName
+	 * @return
+	 */
 	public static ItemStack getItemFromOreDict(String oreName)
 	{
 		List<ItemStack> item = OreDictionary.getOres(oreName);
@@ -661,16 +666,6 @@ public class Utils
 	}
 
 	/**
-	 * 実績取得のトリガーを追加
-	 *
-	 * @param player
-	 * @param achievementName
-	 */
-	public static void triggerAdvancement(EntityPlayer player, Advancement achievementName)
-	{
-	}
-
-	/**
 	 * mobのスポーンを追加
 	 *
 	 * @param entity
@@ -687,43 +682,6 @@ public class Utils
 		//BiomeGenBase.hell.getSpawnableList(EnumCreatureType.monster).add(new BiomeGenBase.SpawnListEntry(EntityBlaze.class, weight, minAmount, maxAmount));
 	}
 
-	// /**
-	// * 釣りで釣れるアイテムを追加
-	// *
-	// * @param item
-	// */
-	// public static void addFishableItemFish(ItemStack itemStack, int weight)
-	// {
-	// FishingHooks.addFish(new WeightedRandomFishable(itemStack, weight));
-	// }
-	//
-	// public static void addFishableItemJunk(ItemStack itemStack, int weight)
-	// {
-	// FishingHooks.addJunk(new WeightedRandomFishable(itemStack, weight));
-	// }
-	//
-	// public static void addFishableItemTreasure(ItemStack itemStack, int
-	// weight)
-	// {
-	// FishingHooks.addTreasure(new WeightedRandomFishable(itemStack, weight));
-	// }
-	//
-	// /**
-	// * お宝チェストに入ってるものを追加
-	// *
-	// * @param category
-	// * @param itemStack
-	// * @param minAmount
-	// * @param maxAmount
-	// * @param weight
-	// */
-	// public static void addTreasureChest(String category, ItemStack itemStack,
-	// int minAmount, int maxAmount, int weight)
-	// {
-	// ChestGenHooks.addItem(category, new WeightedRandomChestContent(itemStack,
-	// minAmount, maxAmount, weight));
-	// }
-
 	/**
 	 * スポナー追加
 	 * @param entityName
@@ -733,12 +691,6 @@ public class Utils
 	{
 		DungeonHooks.addDungeonMob(entityName, rarity);
 	}
-
-	// TODO
-	// public static void name()
-	// {
-	// ForgeHooks.onPlayerTossEvent(player, item, includeName);
-	// }
 
 	/**
 	 * クライアントかサーバかサイドを得る
@@ -1178,7 +1130,7 @@ public class Utils
 	{
 		for(ItemStack item : player.getArmorInventoryList())
 		{
-			if(item != null && item.getItem() == armor)
+			if(!item.isEmpty() && item.getItem() == armor)
 				return true;
 		}
 
