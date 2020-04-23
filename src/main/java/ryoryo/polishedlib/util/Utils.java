@@ -13,12 +13,7 @@ import java.util.UUID;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
@@ -43,7 +38,6 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -74,29 +68,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import ryoryo.polishedlib.PolishedLib;
 import ryoryo.polishedlib.util.enums.EnumColor;
-import ryoryo.polishedlib.util.enums.EnumSimpleFacing;
 
 public class Utils
 {
 	//zero aabb
 	public static final AxisAlignedBB ZERO_AABB = creatAABB(0, 0, 0, 0, 0, 0);
-
-	//Properties
-	public static final PropertyBool NORTH = PropertyBool.create("north");
-	public static final PropertyBool SOUTH = PropertyBool.create("south");
-	public static final PropertyBool WEST = PropertyBool.create("west");
-	public static final PropertyBool EAST = PropertyBool.create("east");
-	public static final PropertyBool UP = PropertyBool.create("up");
-	public static final PropertyBool DOWN = PropertyBool.create("down");
-	public static final PropertyBool TOP = PropertyBool.create("top");
-	public static final PropertyBool BOTTOM = PropertyBool.create("bottom");
-
-	public static final PropertyDirection ALL_FACING = BlockDirectional.FACING;
-	public static final PropertyDirection HORIZONTAL_FACING = BlockHorizontal.FACING;
-	public static final PropertyEnum<Axis> AXIS = PropertyEnum.<Axis> create("axis", Axis.class);
-	public static final PropertyEnum<EnumSimpleFacing> SIMPLE_FACING = PropertyEnum.<EnumSimpleFacing> create("facing", EnumSimpleFacing.class);
-
-	public static final PropertyEnum<EnumColor> COLOR = PropertyEnum.<EnumColor> create("color", EnumColor.class);
 
 	/**
 	 * クラスがロードされているかどうか調べる。
