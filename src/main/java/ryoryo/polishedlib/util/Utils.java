@@ -784,142 +784,6 @@ public class Utils
 	}
 
 	/**
-	 * ある方角から見たときの右側に当たる方角のBlockPos取得
-	 *
-	 * @param facing
-	 * @param pos
-	 * @return
-	 */
-	public static BlockPos getRightPos(EnumFacing facing, BlockPos pos)
-	{
-		switch(facing)
-		{
-		case NORTH:
-		default:
-			return pos.east();
-		case SOUTH:
-			return pos.west();
-		case WEST:
-			return pos.south();
-		case EAST:
-			return pos.north();
-		}
-	}
-
-	/**
-	 * ある方角から見たときの左側に当たる方角のBlockPos取得
-	 *
-	 * @param facing
-	 * @param pos
-	 * @return
-	 */
-	public static BlockPos getLeftPos(EnumFacing facing, BlockPos pos)
-	{
-		switch(facing)
-		{
-		case NORTH:
-		default:
-			return pos.west();
-		case SOUTH:
-			return pos.east();
-		case WEST:
-			return pos.north();
-		case EAST:
-			return pos.south();
-		}
-	}
-
-	/**
-	 * offset分前にやったBlockPos取得
-	 *
-	 * @param facing
-	 * @param pos
-	 * @param offset
-	 * @return
-	 */
-	public static BlockPos getFront(EnumFacing facing, BlockPos pos, int offset)
-	{
-		switch(facing)
-		{
-		case NORTH:
-		default:
-			return pos.north(offset);
-		case SOUTH:
-			return pos.south(offset);
-		case WEST:
-			return pos.west(offset);
-		case EAST:
-			return pos.east(offset);
-		}
-	}
-
-	/**
-	 * offset分後ろにやったBlockPos取得
-	 *
-	 * @param facing
-	 * @param pos
-	 * @param offset
-	 * @return
-	 */
-	public static BlockPos getBack(EnumFacing facing, BlockPos pos, int offset)
-	{
-		switch(facing)
-		{
-		case NORTH:
-		default:
-			return pos.south(offset);
-		case SOUTH:
-			return pos.north(offset);
-		case WEST:
-			return pos.east(offset);
-		case EAST:
-			return pos.west(offset);
-		}
-	}
-
-	/**
-	 * ある方角から見た右側の方角を取得
-	 * @param facing
-	 * @return
-	 */
-	public static EnumFacing getRightFacing(EnumFacing facing)
-	{
-		switch(facing)
-		{
-		case NORTH:
-		default:
-			return EnumFacing.EAST;
-		case SOUTH:
-			return EnumFacing.WEST;
-		case WEST:
-			return EnumFacing.NORTH;
-		case EAST:
-			return EnumFacing.SOUTH;
-		}
-	}
-
-	/**
-	 * ある方角から見た左側の方角を取得
-	 * @param facing
-	 * @return
-	 */
-	public static EnumFacing getLeftFacing(EnumFacing facing)
-	{
-		switch(facing)
-		{
-		case NORTH:
-		default:
-			return EnumFacing.WEST;
-		case SOUTH:
-			return EnumFacing.EAST;
-		case WEST:
-			return EnumFacing.SOUTH;
-		case EAST:
-			return EnumFacing.NORTH;
-		}
-	}
-
-	/**
 	 * AIR Materialかどうか
 	 *
 	 * @param state
@@ -942,6 +806,180 @@ public class Utils
 	}
 
 	/**
+	 * ある方角から見たときの右側に当たる方角のBlockPos取得
+	 *
+	 * @param facing
+	 * @param pos
+	 * @return
+	 */
+	public static BlockPos getRightPos(BlockPos pos, EnumFacing facing, int offset)
+	{
+		return pos.offset(getRightFacing(facing), offset);
+	}
+
+	public static BlockPos getRightPos(BlockPos pos, EnumFacing facing)
+	{
+		return getRightPos(pos, facing, 1);
+	}
+
+	/**
+	 * ある方角から見たときの左側に当たる方角のBlockPos取得
+	 *
+	 * @param facing
+	 * @param pos
+	 * @return
+	 */
+	public static BlockPos getLeftPos(BlockPos pos, EnumFacing facing, int offset)
+	{
+		return pos.offset(getLeftFacing(facing), offset);
+	}
+
+	public static BlockPos getLeftPos(BlockPos pos, EnumFacing facing)
+	{
+		return getLeftPos(pos, facing, 1);
+	}
+
+	/**
+	 * offset分前にやったBlockPos取得
+	 *
+	 * @param facing
+	 * @param pos
+	 * @param offset
+	 * @return
+	 */
+	public static BlockPos getFront(EnumFacing facing, BlockPos pos, int offset)
+	{
+		return pos.offset(facing, offset);
+	}
+
+	public static BlockPos getFront(EnumFacing facing, BlockPos pos)
+	{
+		return getFront(facing, pos, 1);
+	}
+
+	/**
+	 * offset分後ろにやったBlockPos取得
+	 *
+	 * @param facing
+	 * @param pos
+	 * @param offset
+	 * @return
+	 */
+	public static BlockPos getBack(EnumFacing facing, BlockPos pos, int offset)
+	{
+		return pos.offset(facing.getOpposite(), offset);
+	}
+
+	public static BlockPos getBack(EnumFacing facing, BlockPos pos)
+	{
+		return getBack(facing, pos, 1);
+	}
+
+	/**
+	 * ある方角から見た右側の方角を取得
+	 * @param facing
+	 * @return
+	 */
+	public static EnumFacing getRightFacing(EnumFacing facing)
+	{
+		return facing.rotateY();
+	}
+
+	/**
+	 * ある方角から見た左側の方角を取得
+	 * @param facing
+	 * @return
+	 */
+	public static EnumFacing getLeftFacing(EnumFacing facing)
+	{
+		return facing.rotateYCCW();
+	}
+
+	/**
+	 * ターゲットのFacingをベースのFacingからのRotationで表す
+	 *
+	 * @param baseFacing
+	 * @param facing
+	 * @return
+	 */
+	public static Rotation getRotationFromBase(EnumFacing baseFacing, EnumFacing facing)
+	{
+		switch(baseFacing)
+		{
+			case NORTH:
+				switch(facing)
+				{
+					default:
+					case NORTH:
+						return Rotation.NONE;
+					case SOUTH:
+						return Rotation.CLOCKWISE_180;
+					case WEST:
+						return Rotation.COUNTERCLOCKWISE_90;
+					case EAST:
+						return Rotation.CLOCKWISE_90;
+				}
+			case SOUTH:
+				switch(facing)
+				{
+					case NORTH:
+						return Rotation.CLOCKWISE_180;
+					default:
+					case SOUTH:
+						return Rotation.NONE;
+					case WEST:
+						return Rotation.CLOCKWISE_90;
+					case EAST:
+						return Rotation.COUNTERCLOCKWISE_90;
+				}
+			case WEST:
+				switch(facing)
+				{
+					case NORTH:
+						return Rotation.CLOCKWISE_90;
+					case SOUTH:
+						return Rotation.COUNTERCLOCKWISE_90;
+					default:
+					case WEST:
+						return Rotation.NONE;
+					case EAST:
+						return Rotation.CLOCKWISE_180;
+				}
+			case EAST:
+				switch(facing)
+				{
+					case NORTH:
+						return Rotation.COUNTERCLOCKWISE_90;
+					case SOUTH:
+						return Rotation.CLOCKWISE_90;
+					case WEST:
+						return Rotation.CLOCKWISE_180;
+					default:
+					case EAST:
+						return Rotation.NONE;
+				}
+			default:
+				return Rotation.NONE;
+		}
+	}
+
+	public static Rotation getRotationFromNorth(EnumFacing facing)
+	{
+		switch(facing)
+		{
+			default:
+			case NORTH:
+				return Rotation.NONE;
+			case SOUTH:
+				return Rotation.CLOCKWISE_180;
+			case WEST:
+				return Rotation.COUNTERCLOCKWISE_90;
+			case EAST:
+				return Rotation.CLOCKWISE_90;
+		}
+	}
+
+	/**
 	 * AABBを見やすく？ 16で割ってるから0~16でok
 	 *
 	 * @param x1
@@ -958,33 +996,61 @@ public class Utils
 	}
 
 	/**
-	 * 北を向いている時のAABBを入れればほかの時のやつを返す。
+	 * ベースのAABBをRotation分回転させる
 	 *
-	 * @param northAabb
+	 * @param baseAabb
 	 * @param facing
 	 * @return
 	 */
-	// TODO
-	public static AxisAlignedBB rotateAABB(AxisAlignedBB northAabb, Rotation rotation)
+	public static AxisAlignedBB rotateAABB(AxisAlignedBB baseAabb, Rotation rotation)
 	{
-		double minX = northAabb.minX;
-		double minY = northAabb.minY;
-		double minZ = northAabb.minZ;
-		double maxX = northAabb.maxX;
-		double maxY = northAabb.maxY;
-		double maxZ = northAabb.maxZ;
+		double minX = baseAabb.minX;
+		double minY = baseAabb.minY;
+		double minZ = baseAabb.minZ;
+		double maxX = baseAabb.maxX;
+		double maxY = baseAabb.maxY;
+		double maxZ = baseAabb.maxZ;
 
 		switch(rotation)
 		{
 			default:
 			case NONE:
-				return northAabb;
+				return baseAabb;
 			case CLOCKWISE_90:
-				return new AxisAlignedBB(minX, minY, minZ, minX, maxY, maxZ);
+				return new AxisAlignedBB(minZ, minY, 1.0D - maxX, maxZ, maxY, 1.0D - minX);
 			case CLOCKWISE_180:
-				return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+				return new AxisAlignedBB(1.0D - maxX, minY, 1.0D - maxZ, 1.0D - minX, maxY, 1.0D - minZ);
 			case COUNTERCLOCKWISE_90:
-				return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+				return new AxisAlignedBB(1.0D - maxZ, minY, minX, 1.0D - minZ, maxY, maxX);
+		}
+	}
+
+	/**
+	 * Axisの進む向きを法線ベクトルとする面(Axis.X => yz平面)を対称としてひっくり返す
+	 *
+	 * @param baseAabb
+	 * @param axis
+	 * @return
+	 */
+	public static AxisAlignedBB flipAABB(AxisAlignedBB baseAabb, EnumFacing.Axis axis)
+	{
+		double minX = baseAabb.minX;
+		double minY = baseAabb.minY;
+		double minZ = baseAabb.minZ;
+		double maxX = baseAabb.maxX;
+		double maxY = baseAabb.maxY;
+		double maxZ = baseAabb.maxZ;
+
+		switch(axis)
+		{
+			case X:
+				return new AxisAlignedBB(1.0D - maxX, minY, minZ, 1.0D - minX, maxY, maxZ);
+			case Y:
+				return new AxisAlignedBB(minX, 1.0D - maxY, minZ, maxX, 1.0D - minY, maxZ);
+			case Z:
+				return new AxisAlignedBB(minX, minY, 1.0D - maxZ, maxX, maxY, 1.0D - minZ);
+			default:
+				return baseAabb;
 		}
 	}
 
