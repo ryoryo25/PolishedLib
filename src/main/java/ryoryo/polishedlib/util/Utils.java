@@ -41,6 +41,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -139,31 +140,31 @@ public class Utils
 	 * @param player
 	 * @param message
 	 */
-	public static void addChat(EntityPlayer player, String message)
+	public static void sendChat(EntityPlayer player, String message, Object... args)
 	{
-		player.sendMessage(new TextComponentTranslation(message));
+		player.sendMessage(new TextComponentTranslation(message, args));
 	}
 
-	public static void addChat(String message)
+	public static void sendChat(String message, Object... args)
 	{
-		addChat(getPlayer(), message);
+		sendChat(getPlayer(), message, args);
 	}
 
 	/**
-	 * フォーマット付きメッセージ
+	 * プレイヤーのホットバーの上にメッセージを表示(ベッドで寝れないときみたいに)
 	 *
 	 * @param player
 	 * @param message
 	 * @param args
 	 */
-	public static void addChatFormatted(EntityPlayer player, String message, Object... args)
+	public static void sendPopUpMessage(EntityPlayer player, String message, Object... args)
 	{
-		player.sendMessage(new TextComponentTranslation(message, args));
+		player.sendStatusMessage(new TextComponentTranslation(message, args), true);
 	}
 
-	public static void addChatFormatted(String message, Object... args)
+	public static void sendPopUpMessage(String message, Object... args)
 	{
-		addChatFormatted(getPlayer(), message, args);
+		sendPopUpMessage(getPlayer(), message, args);
 	}
 
 	/**
@@ -172,19 +173,7 @@ public class Utils
 	 * @param key
 	 * @return
 	 */
-	public static String translatableString(String key)
-	{
-		return I18n.translateToLocal(key);
-	}
-
-	/**
-	 * フォーマット付き翻訳
-	 *
-	 * @param key
-	 * @param formats
-	 * @return
-	 */
-	public static String translatableStringFormatted(String key, Object... formats)
+	public static String translatableString(String key, Object... formats)
 	{
 		return I18n.translateToLocalFormatted(key, formats);
 	}
@@ -972,22 +961,32 @@ public class Utils
 	 * 北を向いている時のAABBを入れればほかの時のやつを返す。
 	 *
 	 * @param northAabb
+	 * @param facing
 	 * @return
 	 */
 	// TODO
-	// public static AxisAlignedBB[] rotateAABB(AxisAlignedBB northAabb)
-	// {
-	// double minX = northAabb.minX;
-	// double minY = northAabb.minY;
-	// double minZ = northAabb.minZ;
-	// double maxX = northAabb.maxX;
-	// double maxY = northAabb.maxY;
-	// double maxZ = northAabb.maxZ;
-	//
-	// return new AxisAlignedBB[]
-	// {new AxisAlignedBB(minX, minY, minZ, maxX, maxY, 1D - minZ), new
-	// AxisAlignedBB(minZ, minY, minZ, )};
-	// }
+	public static AxisAlignedBB rotateAABB(AxisAlignedBB northAabb, Rotation rotation)
+	{
+		double minX = northAabb.minX;
+		double minY = northAabb.minY;
+		double minZ = northAabb.minZ;
+		double maxX = northAabb.maxX;
+		double maxY = northAabb.maxY;
+		double maxZ = northAabb.maxZ;
+
+		switch(rotation)
+		{
+			default:
+			case NONE:
+				return northAabb;
+			case CLOCKWISE_90:
+				return new AxisAlignedBB(minX, minY, minZ, minX, maxY, maxZ);
+			case CLOCKWISE_180:
+				return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+			case COUNTERCLOCKWISE_90:
+				return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+		}
+	}
 
 	/**
 	 * コンフィグの配列を見やすく
