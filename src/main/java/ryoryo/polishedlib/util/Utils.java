@@ -68,6 +68,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import ryoryo.polishedlib.PolishedLib;
+import ryoryo.polishedlib.util.enums.EnumAxis;
 import ryoryo.polishedlib.util.enums.EnumColor;
 
 public class Utils
@@ -1017,22 +1018,22 @@ public class Utils
 			case NONE:
 				return baseAabb;
 			case CLOCKWISE_90:
-				return new AxisAlignedBB(minZ, minY, 1.0D - maxX, maxZ, maxY, 1.0D - minX);
+				return new AxisAlignedBB(1.0D - maxZ, minY, minX, 1.0D - minZ, maxY, maxX);
 			case CLOCKWISE_180:
 				return new AxisAlignedBB(1.0D - maxX, minY, 1.0D - maxZ, 1.0D - minX, maxY, 1.0D - minZ);
 			case COUNTERCLOCKWISE_90:
-				return new AxisAlignedBB(1.0D - maxZ, minY, minX, 1.0D - minZ, maxY, maxX);
+				return new AxisAlignedBB(minZ, minY, 1.0D - maxX, maxZ, maxY, 1.0D - minX);
 		}
 	}
 
 	/**
-	 * Axisの進む向きを法線ベクトルとする面(Axis.X => yz平面)を対称としてひっくり返す
+	 * Axisの進む向きを法線ベクトルとする面(Axis.X => yz平面)を対称として反転させる
 	 *
 	 * @param baseAabb
 	 * @param axis
 	 * @return
 	 */
-	public static AxisAlignedBB flipAABB(AxisAlignedBB baseAabb, EnumFacing.Axis axis)
+	public static AxisAlignedBB flipAABB(AxisAlignedBB baseAabb, EnumAxis axis)
 	{
 		double minX = baseAabb.minX;
 		double minY = baseAabb.minY;
@@ -1043,15 +1044,29 @@ public class Utils
 
 		switch(axis)
 		{
+			default:
+			case NONE:
+				return baseAabb;
 			case X:
 				return new AxisAlignedBB(1.0D - maxX, minY, minZ, 1.0D - minX, maxY, maxZ);
 			case Y:
 				return new AxisAlignedBB(minX, 1.0D - maxY, minZ, maxX, 1.0D - minY, maxZ);
 			case Z:
 				return new AxisAlignedBB(minX, minY, 1.0D - maxZ, maxX, maxY, 1.0D - minZ);
-			default:
-				return baseAabb;
 		}
+	}
+
+	/**
+	 * doFlip==trueなら，上下を反転させる．
+	 *
+	 * @param baseAabb
+	 * @param doFlip
+	 * @return
+	 */
+	public static AxisAlignedBB flipYAABB(AxisAlignedBB baseAabb, boolean doFlip)
+	{
+		EnumAxis axis = doFlip ? EnumAxis.Y : EnumAxis.NONE;
+		return flipAABB(baseAabb, axis);
 	}
 
 	/**
