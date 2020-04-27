@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Multimap;
 
@@ -376,14 +377,13 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static ItemStack[] getHeldItemStacks(EntityPlayer player)
+	public static List<ItemStack> getHeldItemStacks(EntityPlayer player)
 	{
-		return new ItemStack[]
-		{ getHeldItemStackMainhand(player), getHeldItemStackOffhand(player) };
+		return (List<ItemStack>) player.getHeldEquipment();
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static ItemStack[] getHeldItemStacks()
+	public static List<ItemStack> getHeldItemStacks()
 	{
 		return getHeldItemStacks(getPlayer());
 	}
@@ -428,13 +428,12 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static Item[] getHeldItems(EntityPlayer player)
+	public static List<Item> getHeldItems(EntityPlayer player)
 	{
-		return new Item[]
-		{ getHeldItemMainhand(player), getHeldItemOffhand(player) };
+		return ((List<ItemStack>) player.getHeldEquipment()).stream().map(stack -> stack.getItem()).collect(Collectors.toList());
 	}
 
-	public static Item[] getHeldItems()
+	public static List<Item> getHeldItems()
 	{
 		return getHeldItems(getPlayer());
 	}
