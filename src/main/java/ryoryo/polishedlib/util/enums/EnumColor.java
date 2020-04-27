@@ -1,5 +1,7 @@
 package ryoryo.polishedlib.util.enums;
 
+import java.util.stream.Stream;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -160,6 +162,15 @@ public enum EnumColor implements IStringSerializable
 	public static int getLength()
 	{
 		return EnumColor.values().length;
+	}
+
+	/**
+	 * EnumColorのstream
+	 * @return
+	 */
+	public static Stream<EnumColor> stream()
+	{
+		return Stream.of(values());
 	}
 
 	/**
