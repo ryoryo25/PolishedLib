@@ -152,6 +152,16 @@ public class Utils
 		sendChat(getPlayer(), message, args);
 	}
 
+	public static void sendChat(EntityPlayer player, Object message, Object... args)
+	{
+		sendChat(player, String.valueOf(message), args);
+	}
+
+	public static void sendChat(Object message, Object... args)
+	{
+		sendChat(String.valueOf(message), args);
+	}
+
 	/**
 	 * プレイヤーのホットバーの上にメッセージを表示(ベッドで寝れないときみたいに)
 	 *
@@ -167,6 +177,16 @@ public class Utils
 	public static void sendPopUpMessage(String message, Object... args)
 	{
 		sendPopUpMessage(getPlayer(), message, args);
+	}
+
+	public static void sendPopUpMessage(EntityPlayer player, Object message, Object... args)
+	{
+		sendPopUpMessage(player, String.valueOf(message), args);
+	}
+
+	public static void sendPopUpMessage(Object message, Object... args)
+	{
+		sendPopUpMessage(String.valueOf(message), args);
 	}
 
 	/**
