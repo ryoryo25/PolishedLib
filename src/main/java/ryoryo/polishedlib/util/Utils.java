@@ -341,6 +341,24 @@ public class Utils
 	}
 
 	/**
+	 * スニークのキーが押されているかどうか
+	 * @return
+	 */
+	public static boolean isSneakKeyDown()
+	{
+		return isClient() ? Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown() : false;
+	}
+
+	/**
+	 * ジャンプのキーが押されているかどうか
+	 * @return
+	 */
+	public static boolean isJumpKeyDow()
+	{
+		return isClient() ? Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown() : false;
+	}
+
+	/**
 	 * たぶんサバイバル(アドベンチャー)判定
 	 *
 	 * @param player
