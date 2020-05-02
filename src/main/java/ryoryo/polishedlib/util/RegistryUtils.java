@@ -1,21 +1,39 @@
 package ryoryo.polishedlib.util;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreIngredient;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -235,6 +253,74 @@ public class RegistryUtils
 	}
 
 	/**
+	 * レシピ削除
+	 *
+	 * @param output
+	 */
+	public static void removeRecipe(ItemStack output)
+	{
+		Iterator<IRecipe> remover = ForgeRegistries.RECIPES.iterator();
+
+		while(remover.hasNext())
+		{
+			ItemStack itemStack = remover.next().getRecipeOutput();
+
+			if(itemStack != null && output.isItemEqual(itemStack))
+				remover.remove();
+		}
+	}
+
+	// TODO 精錬レシピ削除
+	/**
+	 * 精錬レシピの限定的な削除
+	 *
+	 * @param input
+	 * @param output
+	 */
+	public static void removeSmeltingRecipe(ItemStack input, ItemStack output)
+	{
+		Map<ItemStack, ItemStack> remover = FurnaceRecipes.instance().getSmeltingList();
+		remover.remove(input, output);
+	}
+
+	public static void removeSmeltingRecipe(ItemStack output)
+	{
+		Map<ItemStack, ItemStack> remover = FurnaceRecipes.instance().getSmeltingList();
+
+		// for(Entry<ItemStack, ItemStack> entry : remover.entrySet())
+		// {
+		// if(output.isItemEqual((ItemStack) entry.getValue()))
+		// {
+		// remover.remove((ItemStack) entry.getKey(), (ItemStack)
+		// entry.getValue());
+		// }
+		// }
+
+		remover.entrySet().stream().filter(entry -> output.isItemEqual((ItemStack) entry.getValue()))
+				.forEach(entry -> remover.remove((ItemStack) entry.getKey(), (ItemStack) entry.getValue()));
+	}
+
+	/**
+	 * 燃料登録を簡単に見やすく
+	 *
+	 * @param burnTime
+	 * @param fuels
+	 */
+	public static void addFuel(int burnTime, ItemStack... fuels)
+	{
+		GameRegistry.registerFuelHandler(fuel ->
+		{
+			for(ItemStack toAdd : fuels)
+			{
+				if(fuel.isItemEqual(toAdd))
+					return burnTime;
+			}
+
+			return 0;
+		});
+	}
+
+	/**
 	 * ブロック登録
 	 *
 	 * @param block
@@ -374,5 +460,149 @@ public class RegistryUtils
 	public void registerModEntity(Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
 	{
 		EntityRegistry.registerModEntity(Utils.makeModLocation(this.modId, entityName), entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
+	}
+
+	/**
+	 * サブブロック登録を簡略化
+	 * @param block
+	 * @param firstMeta
+	 * @param endMeta
+	 * @param tab
+	 * @param list
+	 */
+	public static void registerSubBlocks(Block block, int firstMeta, int endMeta, CreativeTabs tab, NonNullList<ItemStack> list)
+	{
+		if(tab == block.getCreativeTabToDisplayOn())
+		{
+			for(int i = firstMeta; i < endMeta; i++)
+			{
+				list.add(new ItemStack(block, 1, i));
+			}
+		}
+	}
+
+	/**
+	 * サブブロック登録を簡略化
+	 * 0から始める
+	 * @param block
+	 * @param meta
+	 * @param tab
+	 * @param list
+	 */
+	public static void registerSubBlocks(Block block, int meta, CreativeTabs tab, NonNullList<ItemStack> list)
+	{
+		registerSubBlocks(block, 0, meta, tab, list);
+	}
+
+	/**
+	 * サブアイテム登録を簡略化
+	 * @param item
+	 * @param firstMeta
+	 * @param endMeta
+	 * @param tab
+	 * @param list
+	 */
+	public static void registerSubItems(Item item, int firstMeta, int endMeta, CreativeTabs tab, NonNullList<ItemStack> items)
+	{
+		if(tab == item.getCreativeTab())
+		{
+			for(int i = firstMeta; i < endMeta; i++)
+			{
+				items.add(new ItemStack(item, 1, i));
+			}
+		}
+	}
+
+	/**
+	 * サブアイテム登録を簡略化
+	 * 0から始める
+	 * @param item
+	 * @param meta
+	 * @param tab
+	 * @param list
+	 */
+	public static void registerSubItems(Item item, int meta, CreativeTabs tab, NonNullList<ItemStack> items)
+	{
+		registerSubItems(item, 0, meta, tab, items);
+	}
+
+	/**
+	 * IBlockColorを実装しているブロック登録
+	 *
+	 * @param blockColor
+	 * @param blocks
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void registerBlockColor(IBlockColor blockColor, Block... blocks)
+	{
+		if(Utils.isClient())
+			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(blockColor, blocks);
+	}
+
+	/**
+	 * IItemColorを実装しているアイテム登録
+	 *
+	 * @param itemColor
+	 * @param items
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void registerItemColor(IItemColor itemColor, Item... items)
+	{
+		if(Utils.isClient())
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(itemColor, items);
+	}
+
+	/**
+	 * IItemColorを実装しているアイテムブロック登録
+	 *
+	 * @param itemColor
+	 * @param blocks
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void registerItemBlockColor(IItemColor itemColor, Block... blocks)
+	{
+		if(Utils.isClient())
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(itemColor, blocks);
+	}
+
+	/**
+	 * EntityRender登録
+	 *
+	 * @param entityClass
+	 * @param renderFactory
+	 */
+	@SideOnly(Side.CLIENT)
+	public static <T extends Entity> void registerEntityRendering(Class<T> entityClass, IRenderFactory<? super T> renderFactory)
+	{
+		if(Utils.isClient())
+			RenderingRegistry.registerEntityRenderingHandler(entityClass, renderFactory);
+	}
+
+	/**
+	 * キー登録
+	 * @param key
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void registerKeyBinding(KeyBinding key)
+	{
+		if(Utils.isClient())
+			ClientRegistry.registerKeyBinding(key);
+	}
+
+	/**
+	 * EnumParticleTypesへの登録を簡略化
+	 *
+	 * @param enumName
+	 * @param particleName
+	 * @param id
+	 * @param shouldIgnoreRange
+	 * @return
+	 */
+	public static EnumParticleTypes registerParticleType(String enumName, String particleName, int id, boolean shouldIgnoreRange)
+	{
+		Class<?>[] particleParams =
+		{ String.class, int.class, boolean.class };
+
+		return EnumHelper.addEnum(EnumParticleTypes.class, enumName, particleParams, particleName, id, shouldIgnoreRange);
 	}
 }
