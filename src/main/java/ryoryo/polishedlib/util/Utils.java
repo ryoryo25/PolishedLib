@@ -55,9 +55,8 @@ import ryoryo.polishedlib.PolishedLib;
 import ryoryo.polishedlib.util.enums.EnumAxis;
 import ryoryo.polishedlib.util.enums.EnumColor;
 
-public class Utils
-{
-	//zero aabb
+public class Utils {
+	// zero aabb
 	public static final AxisAlignedBB ZERO_AABB = creatAABB(0, 0, 0, 0, 0, 0);
 
 	/**
@@ -68,14 +67,11 @@ public class Utils
 	 *            パッケージまでを含めた完全装飾名を指定する必要がある。例）"minecraftAPI.MCAPI"
 	 * @since 1.4
 	 */
-	public static boolean isClassLoaded(String classname)
-	{
-		try
-		{
+	public static boolean isClassLoaded(String classname) {
+		try {
 			Class.forName(classname);
 		}
-		catch(ClassNotFoundException e)
-		{
+		catch(ClassNotFoundException e) {
 			return false;
 		}
 		return true;
@@ -87,8 +83,7 @@ public class Utils
 	 * @param baseDecimal
 	 * @return
 	 */
-	public static String/* int */ transformDecimalToBinary(int baseDecimal)
-	{
+	public static String/* int */ transformDecimalToBinary(int baseDecimal) {
 		return /* String bin = */"0b" + Integer.toBinaryString(baseDecimal);
 		// return Integer.valueOf(bin);
 	}
@@ -100,8 +95,7 @@ public class Utils
 	 * @param baseDecimal
 	 * @return
 	 */
-	public static String/* int */ transformDecimalToOctal(int baseDecimal)
-	{
+	public static String/* int */ transformDecimalToOctal(int baseDecimal) {
 		return /* String oct = */"0" + Integer.toOctalString(baseDecimal);
 		// return Integer.valueOf(oct);
 	}
@@ -113,8 +107,7 @@ public class Utils
 	 * @param baseDecimal
 	 * @return
 	 */
-	public static String/* int */ transformDecimalToHexadecimal(int baseDecimal)
-	{
+	public static String/* int */ transformDecimalToHexadecimal(int baseDecimal) {
 		return /* String hex = */"0x" + Integer.toHexString(baseDecimal);
 		// return Integer.valueOf(hex);
 	}
@@ -125,23 +118,19 @@ public class Utils
 	 * @param player
 	 * @param message
 	 */
-	public static void sendChat(EntityPlayer player, String message, Object... args)
-	{
+	public static void sendChat(EntityPlayer player, String message, Object... args) {
 		player.sendMessage(new TextComponentTranslation(message, args));
 	}
 
-	public static void sendChat(String message, Object... args)
-	{
+	public static void sendChat(String message, Object... args) {
 		sendChat(getPlayer(), message, args);
 	}
 
-	public static void sendChat(EntityPlayer player, Object message, Object... args)
-	{
+	public static void sendChat(EntityPlayer player, Object message, Object... args) {
 		sendChat(player, String.valueOf(message), args);
 	}
 
-	public static void sendChat(Object message, Object... args)
-	{
+	public static void sendChat(Object message, Object... args) {
 		sendChat(String.valueOf(message), args);
 	}
 
@@ -152,23 +141,19 @@ public class Utils
 	 * @param message
 	 * @param args
 	 */
-	public static void sendPopUpMessage(EntityPlayer player, String message, Object... args)
-	{
+	public static void sendPopUpMessage(EntityPlayer player, String message, Object... args) {
 		player.sendStatusMessage(new TextComponentTranslation(message, args), true);
 	}
 
-	public static void sendPopUpMessage(String message, Object... args)
-	{
+	public static void sendPopUpMessage(String message, Object... args) {
 		sendPopUpMessage(getPlayer(), message, args);
 	}
 
-	public static void sendPopUpMessage(EntityPlayer player, Object message, Object... args)
-	{
+	public static void sendPopUpMessage(EntityPlayer player, Object message, Object... args) {
 		sendPopUpMessage(player, String.valueOf(message), args);
 	}
 
-	public static void sendPopUpMessage(Object message, Object... args)
-	{
+	public static void sendPopUpMessage(Object message, Object... args) {
 		sendPopUpMessage(String.valueOf(message), args);
 	}
 
@@ -178,8 +163,7 @@ public class Utils
 	 * @param key
 	 * @return
 	 */
-	public static String translatableString(String key, Object... formats)
-	{
+	public static String translatableString(String key, Object... formats) {
 		return I18n.translateToLocalFormatted(key, formats);
 	}
 
@@ -193,8 +177,7 @@ public class Utils
 	 * @return 0南 1西 2北 3東
 	 * @since 1.19.160526
 	 */
-	public static int getEntityDirectionS(Entity entity)
-	{
+	public static int getEntityDirectionS(Entity entity) {
 		return MathHelper.floor((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 	}
 
@@ -204,8 +187,7 @@ public class Utils
 	 * @return 0北 1東 2南 3西
 	 * @since 1.4
 	 */
-	public static int getEntityDirection(Entity entity)
-	{
+	public static int getEntityDirection(Entity entity) {
 		return MathHelper.floor((double) (entity.rotationYaw / 90.0F) + 2.5D) & 3;
 	}
 
@@ -215,8 +197,7 @@ public class Utils
 	 * @return 0北 1北東 2東 3南東 4南 5南西 6西 7北西
 	 * @since 1.20.170401
 	 */
-	public static int getEntityDirection8(Entity entity)
-	{
+	public static int getEntityDirection8(Entity entity) {
 		return MathHelper.floor((double) (entity.rotationYaw / 45.0F) + 4.5D) & 7;
 	}
 
@@ -228,8 +209,7 @@ public class Utils
 	 * @return 0北東 1南東 2南西 3北西
 	 * @since 1.4
 	 */
-	public static int getEntityCoordinate(Entity entity)
-	{
+	public static int getEntityCoordinate(Entity entity) {
 		return MathHelper.floor((double) (entity.rotationYaw / 90.0F) + 2) & 3;
 	}
 
@@ -239,8 +219,7 @@ public class Utils
 	 * @return
 	 */
 	@SideOnly(Side.CLIENT)
-	public static EntityPlayer getPlayer()
-	{
+	public static EntityPlayer getPlayer() {
 		return Minecraft.getMinecraft().player;
 	}
 
@@ -250,8 +229,7 @@ public class Utils
 	 * @return
 	 */
 	@SideOnly(Side.CLIENT)
-	public static World getWorld()
-	{
+	public static World getWorld() {
 		return Minecraft.getMinecraft().world;
 	}
 
@@ -261,14 +239,12 @@ public class Utils
 	 * @param world
 	 * @return
 	 */
-	public static int getDimensionId(World world)
-	{
+	public static int getDimensionId(World world) {
 		return world.provider.getDimension();
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static int getDimensionId()
-	{
+	public static int getDimensionId() {
 		return getDimensionId(getWorld());
 	}
 
@@ -278,14 +254,12 @@ public class Utils
 	 * @param world
 	 * @return
 	 */
-	public static String getDimensionName(World world)
-	{
+	public static String getDimensionName(World world) {
 		return world.provider.getDimensionType().getName();
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static String getDimensionName()
-	{
+	public static String getDimensionName() {
 		return getDimensionName(getWorld());
 	}
 
@@ -295,14 +269,12 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static boolean isCreative(EntityPlayer player)
-	{
+	public static boolean isCreative(EntityPlayer player) {
 		return player.capabilities.isCreativeMode;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static boolean isCreative()
-	{
+	public static boolean isCreative() {
 		return isCreative(getPlayer());
 	}
 
@@ -312,32 +284,30 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static final boolean isFlying(EntityPlayer player)
-	{
+	public static final boolean isFlying(EntityPlayer player) {
 		return player.capabilities.isFlying;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static final boolean isFlying()
-	{
+	public static final boolean isFlying() {
 		return isFlying(getPlayer());
 	}
 
 	/**
 	 * スニークのキーが押されているかどうか
+	 *
 	 * @return
 	 */
-	public static boolean isSneakKeyDown()
-	{
+	public static boolean isSneakKeyDown() {
 		return isClient() ? Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown() : false;
 	}
 
 	/**
 	 * ジャンプのキーが押されているかどうか
+	 *
 	 * @return
 	 */
-	public static boolean isJumpKeyDow()
-	{
+	public static boolean isJumpKeyDow() {
 		return isClient() ? Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown() : false;
 	}
 
@@ -347,14 +317,12 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static final boolean isSurvival(EntityPlayer player)
-	{
+	public static final boolean isSurvival(EntityPlayer player) {
 		return !isCreative(player) && !player.isSpectator();
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static final boolean isSurvival()
-	{
+	public static final boolean isSurvival() {
 		return isSurvival(getPlayer());
 	}
 
@@ -364,14 +332,12 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static ItemStack getHeldItemStackMainhand(EntityPlayer player)
-	{
+	public static ItemStack getHeldItemStackMainhand(EntityPlayer player) {
 		return player.getHeldItemMainhand();
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static ItemStack getHeldItemStackMainhand()
-	{
+	public static ItemStack getHeldItemStackMainhand() {
 		return getHeldItemStackMainhand(getPlayer());
 	}
 
@@ -381,14 +347,12 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static ItemStack getHeldItemStackOffhand(EntityPlayer player)
-	{
+	public static ItemStack getHeldItemStackOffhand(EntityPlayer player) {
 		return player.getHeldItemOffhand();
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static ItemStack getHeldItemStackOffhand()
-	{
+	public static ItemStack getHeldItemStackOffhand() {
 		return getHeldItemStackOffhand(getPlayer());
 	}
 
@@ -398,14 +362,12 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static List<ItemStack> getHeldItemStacks(EntityPlayer player)
-	{
+	public static List<ItemStack> getHeldItemStacks(EntityPlayer player) {
 		return (List<ItemStack>) player.getHeldEquipment();
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static List<ItemStack> getHeldItemStacks()
-	{
+	public static List<ItemStack> getHeldItemStacks() {
 		return getHeldItemStacks(getPlayer());
 	}
 
@@ -415,14 +377,12 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static Item getHeldItemMainhand(EntityPlayer player)
-	{
+	public static Item getHeldItemMainhand(EntityPlayer player) {
 		return getHeldItemStackMainhand(player).getItem();
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static Item getHeldItemMainhand()
-	{
+	public static Item getHeldItemMainhand() {
 		return getHeldItemMainhand(getPlayer());
 	}
 
@@ -432,14 +392,12 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static Item getHeldItemOffhand(EntityPlayer player)
-	{
+	public static Item getHeldItemOffhand(EntityPlayer player) {
 		return getHeldItemStackOffhand(player).getItem();
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static Item getHeldItemOffhand()
-	{
+	public static Item getHeldItemOffhand() {
 		return getHeldItemOffhand(getPlayer());
 	}
 
@@ -449,13 +407,11 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static List<Item> getHeldItems(EntityPlayer player)
-	{
+	public static List<Item> getHeldItems(EntityPlayer player) {
 		return ((List<ItemStack>) player.getHeldEquipment()).stream().map(stack -> stack.getItem()).collect(Collectors.toList());
 	}
 
-	public static List<Item> getHeldItems()
-	{
+	public static List<Item> getHeldItems() {
 		return getHeldItems(getPlayer());
 	}
 
@@ -465,14 +421,12 @@ public class Utils
 	 * @param oreName
 	 * @return
 	 */
-	public static boolean isOreDictLoaded(String oreName)
-	{
+	public static boolean isOreDictLoaded(String oreName) {
 		List<ItemStack> item = OreDictionary.getOres(oreName);
 
 		if(item.size() > 0)
 			return true;
-		else
-		{
+		else {
 			PolishedLib.LOGGER.info("The mod which have a " + oreName + " isn't installed.");
 			return false;
 		}
@@ -484,12 +438,10 @@ public class Utils
 	 * @param oreName
 	 * @return
 	 */
-	public static ItemStack getItemFromOreDict(String oreName)
-	{
+	public static ItemStack getItemFromOreDict(String oreName) {
 		List<ItemStack> item = OreDictionary.getOres(oreName);
 
-		if(isOreDictLoaded(oreName))
-		{
+		if(isOreDictLoaded(oreName)) {
 			return new ItemStack(item.get(0).getItem(), 1, item.get(0).getItemDamage());
 		}
 		else
@@ -502,22 +454,16 @@ public class Utils
 	 * @param stack
 	 * @return
 	 */
-	public static List<ItemStack> findOreDict(ItemStack stack)
-	{
+	public static List<ItemStack> findOreDict(ItemStack stack) {
 		String[] oredicts = OreDictionary.getOreNames();
 		List<ItemStack> result = new ArrayList<ItemStack>();
 
-		try
-		{
-			for(int oreId : OreDictionary.getOreIDs(stack))
-			{
-				if(oreId >= 0)
-				{
+		try {
+			for(int oreId : OreDictionary.getOreIDs(stack)) {
+				if(oreId >= 0) {
 					String oreName = OreDictionary.getOreName(oreId);
-					for(String regex : oredicts)
-					{
-						if(oreName.toLowerCase().matches(regex))
-						{
+					for(String regex : oredicts) {
+						if(oreName.toLowerCase().matches(regex)) {
 							result = OreDictionary.getOres(oreName);
 						}
 					}
@@ -525,22 +471,19 @@ public class Utils
 			}
 
 		}
-		catch(NullPointerException e)
-		{
+		catch(NullPointerException e) {
 		}
 
 		return result;
 	}
 
 	/**
-	 * 草からドロップするものを追加
-	 * MinecraftForge.addGrassSeed(seed, weight)の備忘録用
+	 * 草からドロップするものを追加 MinecraftForge.addGrassSeed(seed, weight)の備忘録用
 	 *
 	 * @param seed
 	 * @param weight
 	 */
-	public static void addDropSeedFromGrass(ItemStack seed, int weight)
-	{
+	public static void addDropSeedFromGrass(ItemStack seed, int weight) {
 		MinecraftForge.addGrassSeed(seed, weight);
 	}
 
@@ -551,18 +494,17 @@ public class Utils
 	 * @param primaryColor
 	 * @param secondaryColor
 	 */
-	public static void addSpawnEgg(Class<? extends EntityLiving> entity, int primaryColor, int secondaryColor)
-	{
+	public static void addSpawnEgg(Class<? extends EntityLiving> entity, int primaryColor, int secondaryColor) {
 		EntityRegistry.registerEgg(EntityList.getKey(entity), primaryColor, secondaryColor);
 	}
 
 	/**
 	 * スポーンエッグがあるかどうか
+	 *
 	 * @param entity
 	 * @return
 	 */
-	public static boolean hasSpawnEgg(EntityLiving entity)
-	{
+	public static boolean hasSpawnEgg(EntityLiving entity) {
 		return EntityList.ENTITY_EGGS.containsKey(EntityList.getKey(entity));
 	}
 
@@ -576,20 +518,21 @@ public class Utils
 	 * @param type
 	 * @param biomes
 	 */
-	public static void addSpawnEntity(Class<? extends EntityLiving> entity, int weight, int minAmount, int maxAmount, EnumCreatureType type, Biome... biomes)
-	{
+	public static void addSpawnEntity(Class<? extends EntityLiving> entity, int weight, int minAmount, int maxAmount, EnumCreatureType type, Biome... biomes) {
 		EntityRegistry.addSpawn(entity, weight, minAmount, maxAmount, type, biomes);
 		// 大体同義
-		//BiomeGenBase.hell.getSpawnableList(EnumCreatureType.monster).add(new BiomeGenBase.SpawnListEntry(EntityBlaze.class, weight, minAmount, maxAmount));
+		// BiomeGenBase.hell.getSpawnableList(EnumCreatureType.monster).add(new
+		// BiomeGenBase.SpawnListEntry(EntityBlaze.class, weight, minAmount,
+		// maxAmount));
 	}
 
 	/**
 	 * スポナー追加
+	 *
 	 * @param entityName
 	 * @param rarity
 	 */
-	public static void addMobSpawner(ResourceLocation entityName, int rarity)
-	{
+	public static void addMobSpawner(ResourceLocation entityName, int rarity) {
 		DungeonHooks.addDungeonMob(entityName, rarity);
 	}
 
@@ -598,8 +541,7 @@ public class Utils
 	 *
 	 * @return
 	 */
-	public static Side getSide()
-	{
+	public static Side getSide() {
 		return FMLCommonHandler.instance().getSide();
 	}
 
@@ -608,8 +550,7 @@ public class Utils
 	 *
 	 * @return
 	 */
-	public static boolean isServer()
-	{
+	public static boolean isServer() {
 		return FMLCommonHandler.instance().getSide().isServer();
 	}
 
@@ -618,8 +559,7 @@ public class Utils
 	 *
 	 * @return
 	 */
-	public static boolean isClient()
-	{
+	public static boolean isClient() {
 		return FMLCommonHandler.instance().getSide().isClient();
 	}
 
@@ -629,8 +569,7 @@ public class Utils
 	 * @param world
 	 * @return
 	 */
-	public static EnumDifficulty getWorldDifficulty(World world)
-	{
+	public static EnumDifficulty getWorldDifficulty(World world) {
 		return world.getDifficulty();
 	}
 
@@ -640,8 +579,7 @@ public class Utils
 	 * @param world
 	 * @return
 	 */
-	public static boolean isPeacefulMode(World world)
-	{
+	public static boolean isPeacefulMode(World world) {
 		return world.getDifficulty() == EnumDifficulty.PEACEFUL;
 	}
 
@@ -651,8 +589,7 @@ public class Utils
 	 * @param world
 	 * @return
 	 */
-	public static boolean isHardMode(World world)
-	{
+	public static boolean isHardMode(World world) {
 		return world.getDifficulty() == EnumDifficulty.HARD;
 	}
 
@@ -662,8 +599,7 @@ public class Utils
 	 * @param state
 	 * @return
 	 */
-	public static boolean isAirMaterial(IBlockState state)
-	{
+	public static boolean isAirMaterial(IBlockState state) {
 		return state.getMaterial() == Material.AIR;
 	}
 
@@ -673,8 +609,7 @@ public class Utils
 	 * @param state
 	 * @return
 	 */
-	public static boolean isAir(IBlockState state)
-	{
+	public static boolean isAir(IBlockState state) {
 		return state.getBlock() == Blocks.AIR;
 	}
 
@@ -685,13 +620,11 @@ public class Utils
 	 * @param pos
 	 * @return
 	 */
-	public static BlockPos getRightPos(BlockPos pos, EnumFacing facing, int offset)
-	{
+	public static BlockPos getRightPos(BlockPos pos, EnumFacing facing, int offset) {
 		return pos.offset(getRightFacing(facing), offset);
 	}
 
-	public static BlockPos getRightPos(BlockPos pos, EnumFacing facing)
-	{
+	public static BlockPos getRightPos(BlockPos pos, EnumFacing facing) {
 		return getRightPos(pos, facing, 1);
 	}
 
@@ -702,13 +635,11 @@ public class Utils
 	 * @param pos
 	 * @return
 	 */
-	public static BlockPos getLeftPos(BlockPos pos, EnumFacing facing, int offset)
-	{
+	public static BlockPos getLeftPos(BlockPos pos, EnumFacing facing, int offset) {
 		return pos.offset(getLeftFacing(facing), offset);
 	}
 
-	public static BlockPos getLeftPos(BlockPos pos, EnumFacing facing)
-	{
+	public static BlockPos getLeftPos(BlockPos pos, EnumFacing facing) {
 		return getLeftPos(pos, facing, 1);
 	}
 
@@ -720,13 +651,11 @@ public class Utils
 	 * @param offset
 	 * @return
 	 */
-	public static BlockPos getFront(EnumFacing facing, BlockPos pos, int offset)
-	{
+	public static BlockPos getFront(EnumFacing facing, BlockPos pos, int offset) {
 		return pos.offset(facing, offset);
 	}
 
-	public static BlockPos getFront(EnumFacing facing, BlockPos pos)
-	{
+	public static BlockPos getFront(EnumFacing facing, BlockPos pos) {
 		return getFront(facing, pos, 1);
 	}
 
@@ -738,33 +667,31 @@ public class Utils
 	 * @param offset
 	 * @return
 	 */
-	public static BlockPos getBack(EnumFacing facing, BlockPos pos, int offset)
-	{
+	public static BlockPos getBack(EnumFacing facing, BlockPos pos, int offset) {
 		return pos.offset(facing.getOpposite(), offset);
 	}
 
-	public static BlockPos getBack(EnumFacing facing, BlockPos pos)
-	{
+	public static BlockPos getBack(EnumFacing facing, BlockPos pos) {
 		return getBack(facing, pos, 1);
 	}
 
 	/**
 	 * ある方角から見た右側の方角を取得
+	 *
 	 * @param facing
 	 * @return
 	 */
-	public static EnumFacing getRightFacing(EnumFacing facing)
-	{
+	public static EnumFacing getRightFacing(EnumFacing facing) {
 		return facing.rotateY();
 	}
 
 	/**
 	 * ある方角から見た左側の方角を取得
+	 *
 	 * @param facing
 	 * @return
 	 */
-	public static EnumFacing getLeftFacing(EnumFacing facing)
-	{
+	public static EnumFacing getLeftFacing(EnumFacing facing) {
 		return facing.rotateYCCW();
 	}
 
@@ -775,13 +702,10 @@ public class Utils
 	 * @param facing
 	 * @return
 	 */
-	public static Rotation getRotationFromBase(EnumFacing baseFacing, EnumFacing facing)
-	{
-		switch(baseFacing)
-		{
+	public static Rotation getRotationFromBase(EnumFacing baseFacing, EnumFacing facing) {
+		switch(baseFacing) {
 			case NORTH:
-				switch(facing)
-				{
+				switch(facing) {
 					default:
 					case NORTH:
 						return Rotation.NONE;
@@ -793,8 +717,7 @@ public class Utils
 						return Rotation.CLOCKWISE_90;
 				}
 			case SOUTH:
-				switch(facing)
-				{
+				switch(facing) {
 					case NORTH:
 						return Rotation.CLOCKWISE_180;
 					default:
@@ -806,8 +729,7 @@ public class Utils
 						return Rotation.COUNTERCLOCKWISE_90;
 				}
 			case WEST:
-				switch(facing)
-				{
+				switch(facing) {
 					case NORTH:
 						return Rotation.CLOCKWISE_90;
 					case SOUTH:
@@ -819,8 +741,7 @@ public class Utils
 						return Rotation.CLOCKWISE_180;
 				}
 			case EAST:
-				switch(facing)
-				{
+				switch(facing) {
 					case NORTH:
 						return Rotation.COUNTERCLOCKWISE_90;
 					case SOUTH:
@@ -836,10 +757,8 @@ public class Utils
 		}
 	}
 
-	public static Rotation getRotationFromNorth(EnumFacing facing)
-	{
-		switch(facing)
-		{
+	public static Rotation getRotationFromNorth(EnumFacing facing) {
+		switch(facing) {
 			default:
 			case NORTH:
 				return Rotation.NONE;
@@ -863,8 +782,7 @@ public class Utils
 	 * @param z2
 	 * @return
 	 */
-	public static AxisAlignedBB creatAABB(double x1, double y1, double z1, double x2, double y2, double z2)
-	{
+	public static AxisAlignedBB creatAABB(double x1, double y1, double z1, double x2, double y2, double z2) {
 		return new AxisAlignedBB(x1 / 16.0D, y1 / 16.0D, z1 / 16.0D, x2 / 16.0D, y2 / 16.0D, z2 / 16.0D);
 	}
 
@@ -875,8 +793,7 @@ public class Utils
 	 * @param facing
 	 * @return
 	 */
-	public static AxisAlignedBB rotateAABB(AxisAlignedBB baseAabb, Rotation rotation)
-	{
+	public static AxisAlignedBB rotateAABB(AxisAlignedBB baseAabb, Rotation rotation) {
 		double minX = baseAabb.minX;
 		double minY = baseAabb.minY;
 		double minZ = baseAabb.minZ;
@@ -884,8 +801,7 @@ public class Utils
 		double maxY = baseAabb.maxY;
 		double maxZ = baseAabb.maxZ;
 
-		switch(rotation)
-		{
+		switch(rotation) {
 			default:
 			case NONE:
 				return baseAabb;
@@ -905,8 +821,7 @@ public class Utils
 	 * @param axis
 	 * @return
 	 */
-	public static AxisAlignedBB flipAABB(AxisAlignedBB baseAabb, EnumAxis axis)
-	{
+	public static AxisAlignedBB flipAABB(AxisAlignedBB baseAabb, EnumAxis axis) {
 		double minX = baseAabb.minX;
 		double minY = baseAabb.minY;
 		double minZ = baseAabb.minZ;
@@ -914,8 +829,7 @@ public class Utils
 		double maxY = baseAabb.maxY;
 		double maxZ = baseAabb.maxZ;
 
-		switch(axis)
-		{
+		switch(axis) {
 			default:
 			case NONE:
 				return baseAabb;
@@ -935,8 +849,7 @@ public class Utils
 	 * @param doFlip
 	 * @return
 	 */
-	public static AxisAlignedBB flipYAABB(AxisAlignedBB baseAabb, boolean doFlip)
-	{
+	public static AxisAlignedBB flipYAABB(AxisAlignedBB baseAabb, boolean doFlip) {
 		EnumAxis axis = doFlip ? EnumAxis.Y : EnumAxis.NONE;
 		return flipAABB(baseAabb, axis);
 	}
@@ -951,8 +864,7 @@ public class Utils
 	 * @param comment
 	 * @return
 	 */
-	public static List<String> getStringList(Configuration config, String name, String category, String[] defaultValues, String comment)
-	{
+	public static List<String> getStringList(Configuration config, String name, String category, String[] defaultValues, String comment) {
 		return Arrays.asList(config.getStringList(name, category, defaultValues, comment));
 	}
 
@@ -963,8 +875,7 @@ public class Utils
 	 * @param stacksize
 	 * @return
 	 */
-	public static ItemStack getSpawnEggItemStack(Class<? extends EntityLiving> entity, int stacksize)
-	{
+	public static ItemStack getSpawnEggItemStack(Class<? extends EntityLiving> entity, int stacksize) {
 		ItemStack spawn = new ItemStack(Items.SPAWN_EGG, stacksize);
 		ItemMonsterPlacer.applyEntityIdToItemStack(spawn, EntityList.getKey(entity));
 		return spawn;
@@ -977,8 +888,7 @@ public class Utils
 	 * @param stacksize
 	 * @return
 	 */
-	public static ItemStack getPlayerHead(EntityPlayer player, int stacksize)
-	{
+	public static ItemStack getPlayerHead(EntityPlayer player, int stacksize) {
 		String name = player.getName();
 		ItemStack head = new ItemStack(Items.SKULL, stacksize, 3);
 		NBTTagCompound nbt = head.hasTagCompound() ? head.getTagCompound() : new NBTTagCompound();
@@ -990,43 +900,39 @@ public class Utils
 		return head;
 	}
 
-	public static float lightLevel(float level)
-	{
+	public static float lightLevel(float level) {
 		return level / 15F;
 	}
 
 	/**
-	 * プレイヤーにアイテムを与える
-	 * 備忘録用
+	 * プレイヤーにアイテムを与える 備忘録用
 	 *
 	 * @param player
 	 * @param stack
 	 * @param preferredSlot
 	 */
-	public static void giveItemToPlayer(EntityPlayer player, ItemStack stack, int preferredSlot)
-	{
+	public static void giveItemToPlayer(EntityPlayer player, ItemStack stack, int preferredSlot) {
 		ItemHandlerHelper.giveItemToPlayer(player, stack, preferredSlot);
 	}
 
 	/**
-	 * プレイヤーにアイテムを与える
-	 * 備忘録用
+	 * プレイヤーにアイテムを与える 備忘録用
+	 *
 	 * @param player
 	 * @param stack
 	 */
-	public static void giveItemToPlayer(EntityPlayer player, ItemStack stack)
-	{
+	public static void giveItemToPlayer(EntityPlayer player, ItemStack stack) {
 		ItemHandlerHelper.giveItemToPlayer(player, stack);
 	}
 
 	/**
 	 * NBTタグを取得
+	 *
 	 * @param nbt
 	 * @param keyName
 	 * @return
 	 */
-	public static NBTTagCompound getTagCompound(NBTTagCompound nbt, String keyName)
-	{
+	public static NBTTagCompound getTagCompound(NBTTagCompound nbt, String keyName) {
 		if(nbt == null || !nbt.hasKey(keyName))
 			return new NBTTagCompound();
 
@@ -1034,16 +940,14 @@ public class Utils
 	}
 
 	/**
-	 * iがaからbの(a,bを含む)範囲に入っているか
-	 * a <= i <= b
+	 * iがaからbの(a,bを含む)範囲に入っているか a <= i <= b
 	 *
 	 * @param i
 	 * @param a
 	 * @param b
 	 * @return
 	 */
-	public static boolean isInAToB(int i, int a, int b)
-	{
+	public static boolean isInAToB(int i, int a, int b) {
 		return a <= i && i <= b;
 	}
 
@@ -1054,10 +958,8 @@ public class Utils
 	 * @param armor
 	 * @return
 	 */
-	public static boolean isEquippedArmor(EntityPlayer player, ItemArmor armor)
-	{
-		for(ItemStack item : player.getArmorInventoryList())
-		{
+	public static boolean isEquippedArmor(EntityPlayer player, ItemArmor armor) {
+		for(ItemStack item : player.getArmorInventoryList()) {
 			if(!item.isEmpty() && item.getItem() == armor)
 				return true;
 		}
@@ -1072,70 +974,64 @@ public class Utils
 	 * @param amount
 	 * @return
 	 */
-	public static ItemStack damageStack(ItemStack stack, int amount)
-	{
+	public static ItemStack damageStack(ItemStack stack, int amount) {
 		return new ItemStack(stack.getItem(), amount, stack.getItemDamage() + 1);
 	}
 
 	/**
 	 * 剣の速度とか変更
+	 *
 	 * @param amount
 	 * @param modifierMultimap
 	 * @param attribute
 	 * @param id
 	 * @param multiplier
 	 */
-	public static void replaceModifier(Multimap<String, AttributeModifier> modifierMultimap, IAttribute attribute, UUID id, double multiplier)
-	{
+	public static void replaceModifier(Multimap<String, AttributeModifier> modifierMultimap, IAttribute attribute, UUID id, double multiplier) {
 		// Get the modifiers for the specified attribute
 		final Collection<AttributeModifier> modifiers = modifierMultimap.get(attribute.getName());
 
 		// Find the modifier with the specified ID, if any
 		final Optional<AttributeModifier> modifierOptional = modifiers.stream().filter(attributeModifier -> attributeModifier.getID().equals(id)).findFirst();
 
-		if(modifierOptional.isPresent())
-		{ // If it exists,
+		if(modifierOptional.isPresent()) { // If it exists,
 			final AttributeModifier modifier = modifierOptional.get();
 			modifiers.remove(modifier); // Remove it
-			modifiers.add(new AttributeModifier(modifier.getID(), modifier.getName(), modifier.getAmount() * multiplier, modifier.getOperation())); // Add the new modifier
+			modifiers.add(new AttributeModifier(modifier.getID(), modifier.getName(), modifier.getAmount() * multiplier, modifier.getOperation())); // Add
+																																					// the
+																																					// new
+																																					// modifier
 		}
 	}
 
-	public static ResourceLocation makeModLocation(String modId, String name)
-	{
+	public static ResourceLocation makeModLocation(String modId, String name) {
 		return new ResourceLocation(modId, name);
 	}
 
 	/**
 	 * 色のRGBをぐるぐる
+	 *
 	 * @param pos
 	 * @return
 	 */
-	public static float[] getWheelColor(float pos)
-	{
-		if(pos < 85.0f)
-		{
-			return new float[]
-			{ pos * 3.0F, 255.0f - pos * 3.0f, 0.0f };
+	public static float[] getWheelColor(float pos) {
+		if(pos < 85.0f) {
+			return new float[] { pos * 3.0F, 255.0f - pos * 3.0f, 0.0f };
 		}
-		if(pos < 170.0f)
-		{
-			return new float[]
-			{ 255.0f - (pos -= 85.0f) * 3.0f, 0.0f, pos * 3.0f };
+		if(pos < 170.0f) {
+			return new float[] { 255.0f - (pos -= 85.0f) * 3.0f, 0.0f, pos * 3.0f };
 		}
-		return new float[]
-		{ 0.0f, (pos -= 170.0f) * 3.0f, 255.0f - pos * 3.0f };
+		return new float[] { 0.0f, (pos -= 170.0f) * 3.0f, 255.0f - pos * 3.0f };
 	}
 
 	/**
 	 * ワールドの時間で色がぐるぐるする耐久値バーのRGB
+	 *
 	 * @param player
 	 * @return
 	 */
-	public static int getWheelColorDurabilityBar(EntityPlayer player)
-	{
-		if(player != null && player.world != null)
-		{
+	public static int getWheelColorDurabilityBar(EntityPlayer player) {
+		if(player != null && player.world != null) {
 			float[] color = Utils.getWheelColor(player.world.getTotalWorldTime() % 256);
 			return MathHelper.rgb(color[0] / 255F, color[1] / 255F, color[2] / 255F);
 		}
@@ -1145,40 +1041,34 @@ public class Utils
 
 	/**
 	 * アイテムスタックの変動によるアイテムの再使用を抑制する
+	 *
 	 * @param gun
 	 * @param player
 	 */
-	public static void setUncheckedItemStack(ItemStack gun, EntityPlayer player)
-	{
-		try
-		{
+	public static void setUncheckedItemStack(ItemStack gun, EntityPlayer player) {
+		try {
 			Class<?> clazz = ReflectionHelper.getClass(gun.getClass().getClassLoader(), "net.minecraft.entity.EntityLivingBase");
 			Field field = ReflectionHelper.findField(clazz, "previousEquipment", "field_82180_bT");
 			ItemStack[] equipments = (ItemStack[]) field.get(player);
 			equipments[0] = gun.copy();
 			field.set(player, equipments);
-			//			ReflectionHelper.setPrivateValue(lclass, pPlayer, lequipments, "previousEquipment");
-			if(player instanceof EntityPlayer)
-			{
+			// ReflectionHelper.setPrivateValue(lclass, pPlayer, lequipments,
+			// "previousEquipment");
+			if(player instanceof EntityPlayer) {
 				Container lctr = player.openContainer;
-				for(int i = 0; i < lctr.inventorySlots.size(); i++)
-				{
+				for(int i = 0; i < lctr.inventorySlots.size(); i++) {
 					ItemStack lis = lctr.getSlot(i).getStack();
-					if(lis == gun)
-					{
+					if(lis == gun) {
 						lctr.inventoryItemStacks.set(i, gun.copy());
 						break;
 					}
 				}
 			}
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-
 
 	/**
 	 * プレイヤーが動いてるか判定
@@ -1186,8 +1076,7 @@ public class Utils
 	 * @param player
 	 * @return
 	 */
-	public static boolean isPlayerMoving(EntityPlayer player)
-	{
+	public static boolean isPlayerMoving(EntityPlayer player) {
 		return player.posX != player.lastTickPosX || player.posY != player.lastTickPosY || player.posZ != player.lastTickPosZ;
 	}
 }

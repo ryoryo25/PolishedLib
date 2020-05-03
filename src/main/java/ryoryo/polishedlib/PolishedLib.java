@@ -15,38 +15,33 @@ import ryoryo.polishedlib.proxy.CommonProxy;
 import ryoryo.polishedlib.util.References;
 
 @Mod(modid = References.MOD_ID, name = References.MOD_NAME, version = References.MOD_VERSION, dependencies = References.MOD_DEPENDENCIES, acceptedMinecraftVersions = References.MOD_ACCEPTED_MC_VERSIONS, useMetadata = true, guiFactory = References.MOD_GUI_FACTORY)
-public class PolishedLib
-{
+public class PolishedLib {
 	@Instance(References.MOD_ID)
 	public static PolishedLib INSTANCE;
 
-	@SidedProxy(clientSide=References.PROXY_CLIENT, serverSide=References.PROXY_COMMON)
+	@SidedProxy(clientSide = References.PROXY_CLIENT, serverSide = References.PROXY_COMMON)
 	public static CommonProxy proxy;
 
 	public static final Logger LOGGER = LogManager.getLogger(References.MOD_ID);
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
+	public void preInit(FMLPreInitializationEvent event) {
 		INSTANCE = this;
 		proxy.preInit(event);
 	}
 
 	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
+	public void init(FMLInitializationEvent event) {
 		proxy.init(event);
 	}
 
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent event)
-	{
+	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit(event);
 	}
 
 	@EventHandler
-	public void loadComplete(FMLLoadCompleteEvent event)
-	{
+	public void loadComplete(FMLLoadCompleteEvent event) {
 		proxy.loadComplete(event);
 	}
 }

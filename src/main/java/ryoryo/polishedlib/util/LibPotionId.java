@@ -2,17 +2,16 @@ package ryoryo.polishedlib.util;
 
 import net.minecraft.potion.Potion;
 
-public class LibPotionId
-{
+public class LibPotionId {
 	/** 移動速度上昇 */
 	public static final int SPEED = Potion.getIdFromPotion(Potions.SPEED);
 	/** 移動速度低下 */
 	public static final int SLOWNESS = Potion.getIdFromPotion(Potions.SLOWNESS);
-	/** 採掘速度上昇*/
+	/** 採掘速度上昇 */
 	public static final int HASTE = Potion.getIdFromPotion(Potions.HASTE);
 	/** 採掘速度低下 */
 	public static final int MINING_FATIGUE = Potion.getIdFromPotion(Potions.MINING_FATIGUE);
-	/** 攻撃力上昇*/
+	/** 攻撃力上昇 */
 	public static final int STRENGTH = Potion.getIdFromPotion(Potions.STRENGTH);
 	/** 即時回復 */
 	public static final int INSTANT_HEALTH = Potion.getIdFromPotion(Potions.INSTANT_HEALTH);

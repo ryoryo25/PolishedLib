@@ -14,37 +14,30 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemBlockDoor extends ItemBlock
-{
+public class ItemBlockDoor extends ItemBlock {
 	private final Block block;
 
-	public ItemBlockDoor(Block block)
-	{
+	public ItemBlockDoor(Block block) {
 		super(block);
 		this.block = block;
 	}
 
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-	{
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack stack = player.getHeldItem(hand);
 
-		if(facing != EnumFacing.UP)
-		{
+		if(facing != EnumFacing.UP) {
 			return EnumActionResult.FAIL;
 		}
-		else
-		{
+		else {
 			IBlockState iblockstate = world.getBlockState(pos);
 			Block block = iblockstate.getBlock();
 
-			if(!block.isReplaceable(world, pos))
-			{
+			if(!block.isReplaceable(world, pos)) {
 				pos = pos.offset(facing);
 			}
 
-			if(player.canPlayerEdit(pos, facing, stack) && this.block.canPlaceBlockAt(world, pos))
-			{
+			if(player.canPlayerEdit(pos, facing, stack) && this.block.canPlaceBlockAt(world, pos)) {
 				EnumFacing enumfacing = EnumFacing.fromAngle((double) player.rotationYaw);
 				int i = enumfacing.getFrontOffsetX();
 				int j = enumfacing.getFrontOffsetZ();
@@ -55,15 +48,13 @@ public class ItemBlockDoor extends ItemBlock
 				stack.shrink(1);
 				return EnumActionResult.SUCCESS;
 			}
-			else
-			{
+			else {
 				return EnumActionResult.FAIL;
 			}
 		}
 	}
 
-	public static void placeDoor(World world, BlockPos pos, EnumFacing facing, Block door, boolean isRightHinge)
-	{
+	public static void placeDoor(World world, BlockPos pos, EnumFacing facing, Block door, boolean isRightHinge) {
 		BlockPos blockpos = pos.offset(facing.rotateY());
 		BlockPos blockpos1 = pos.offset(facing.rotateYCCW());
 		int i = (world.getBlockState(blockpos1).isNormalCube() ? 1 : 0) + (world.getBlockState(blockpos1.up()).isNormalCube() ? 1 : 0);
@@ -71,15 +62,12 @@ public class ItemBlockDoor extends ItemBlock
 		boolean flag = world.getBlockState(blockpos1).getBlock() == door || world.getBlockState(blockpos1.up()).getBlock() == door;
 		boolean flag1 = world.getBlockState(blockpos).getBlock() == door || world.getBlockState(blockpos.up()).getBlock() == door;
 
-		if((!flag || flag1) && j <= i)
-		{
-			if(flag1 && !flag || j < i)
-			{
+		if((!flag || flag1) && j <= i) {
+			if(flag1 && !flag || j < i) {
 				isRightHinge = false;
 			}
 		}
-		else
-		{
+		else {
 			isRightHinge = true;
 		}
 

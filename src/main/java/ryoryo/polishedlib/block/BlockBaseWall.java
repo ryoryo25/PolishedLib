@@ -14,29 +14,24 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockBaseWall extends BlockWall
-{
-	public BlockBaseWall(Block baseBlock)
-	{
+public class BlockBaseWall extends BlockWall {
+	public BlockBaseWall(Block baseBlock) {
 		super(baseBlock);
 		this.setUnlocalizedName(baseBlock.getUnlocalizedName().substring(5) + "_wall");
 	}
 
-	public BlockBaseWall(Block baseBlock, String name)
-	{
+	public BlockBaseWall(Block baseBlock, String name) {
 		super(baseBlock);
 		this.setUnlocalizedName(name + "_wall");
 	}
 
-	private boolean canConnectTo(IBlockAccess world, BlockPos pos)
-	{
+	private boolean canConnectTo(IBlockAccess world, BlockPos pos) {
 		IBlockState iblockstate = world.getBlockState(pos);
 		Block block = iblockstate.getBlock();
 		return block == Blocks.BARRIER ? false : (block != this && !(block instanceof BlockFenceGate) && !(block instanceof BlockWall) ? (block.getMaterial(iblockstate).isOpaque() && iblockstate.isFullCube() ? block.getMaterial(iblockstate) != Material.GOURD : false) : true);
 	}
 
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		boolean flag = this.canConnectTo(world, pos.north());
 		boolean flag1 = this.canConnectTo(world, pos.east());
 		boolean flag2 = this.canConnectTo(world, pos.south());
@@ -47,8 +42,7 @@ public class BlockBaseWall extends BlockWall
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
-	{
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
 		list.add(new ItemStack(this, 1, 0));
 	}
 }

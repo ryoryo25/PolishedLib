@@ -1,8 +1,7 @@
 package ryoryo.polishedlib.util;
 
-public class NumericalConstant
-{
-	//Constants
+public class NumericalConstant {
+	// Constants
 	public static final int INT_MAX = Integer.MAX_VALUE;
 	public static final int INT_MIN = Integer.MIN_VALUE;
 

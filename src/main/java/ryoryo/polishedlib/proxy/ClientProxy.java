@@ -1,5 +1,4 @@
 package ryoryo.polishedlib.proxy;
 
-public class ClientProxy extends CommonProxy
-{
+public class ClientProxy extends CommonProxy {
 }

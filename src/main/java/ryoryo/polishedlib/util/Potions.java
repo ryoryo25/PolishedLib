@@ -5,17 +5,16 @@ import javax.annotation.Nullable;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 
-public class Potions
-{
+public class Potions {
 	/** 移動速度上昇 */
 	public static final Potion SPEED = getRegisteredPotion("speed");
 	/** 移動速度低下 */
 	public static final Potion SLOWNESS = getRegisteredPotion("slowness");
-	/** 採掘速度上昇*/
+	/** 採掘速度上昇 */
 	public static final Potion HASTE = getRegisteredPotion("haste");
 	/** 採掘速度低下 */
 	public static final Potion MINING_FATIGUE = getRegisteredPotion("mining_fatigue");
-	/** 攻撃力上昇*/
+	/** 攻撃力上昇 */
 	public static final Potion STRENGTH = getRegisteredPotion("strength");
 	/** 即時回復 */
 	public static final Potion INSTANT_HEALTH = getRegisteredPotion("instant_health");
@@ -63,8 +62,7 @@ public class Potions
 	public static final Potion UNLUCK = getRegisteredPotion("unluck");
 
 	@Nullable
-	private static Potion getRegisteredPotion(String id)
-	{
+	private static Potion getRegisteredPotion(String id) {
 		Potion potion = Potion.REGISTRY.getObject(new ResourceLocation(id));
 
 		if(potion == null)

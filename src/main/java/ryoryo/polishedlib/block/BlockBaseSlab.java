@@ -5,10 +5,8 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 
-public abstract class BlockBaseSlab extends BlockSlab
-{
-	public BlockBaseSlab(Material material, String name, CreativeTabs tab, float hardness, float resistance, SoundType soundType)
-	{
+public abstract class BlockBaseSlab extends BlockSlab {
+	public BlockBaseSlab(Material material, String name, CreativeTabs tab, float hardness, float resistance, SoundType soundType) {
 		super(material);
 		this.setCreativeTab(tab);
 

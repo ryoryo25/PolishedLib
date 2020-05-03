@@ -2,16 +2,14 @@ package ryoryo.polishedlib.util;
 
 import net.minecraft.world.World;
 
-public class ArithmeticUtils
-{
+public class ArithmeticUtils {
 	/**
 	 * 小数をパーセントに変換
 	 *
 	 * @param base
 	 * @return
 	 */
-	public static float decimalToPercent(float base)
-	{
+	public static float decimalToPercent(float base) {
 		return base * 100F;
 	}
 
@@ -21,8 +19,7 @@ public class ArithmeticUtils
 	 * @param base
 	 * @return
 	 */
-	public static float decimalToPermil(float base)
-	{
+	public static float decimalToPermil(float base) {
 		return base * 1000F;
 	}
 
@@ -32,8 +29,7 @@ public class ArithmeticUtils
 	 * @param percent
 	 * @return
 	 */
-	public static float percentToDecimal(float percent)
-	{
+	public static float percentToDecimal(float percent) {
 		return percent / 100F;
 	}
 
@@ -43,8 +39,7 @@ public class ArithmeticUtils
 	 * @param permil
 	 * @return
 	 */
-	public static float permilToDecimal(float permil)
-	{
+	public static float permilToDecimal(float permil) {
 		return permil / 1000F;
 	}
 
@@ -54,8 +49,7 @@ public class ArithmeticUtils
 	 * @param tick
 	 * @return
 	 */
-	public static float tickToSecond(float tick)
-	{
+	public static float tickToSecond(float tick) {
 		return tick / 20F;
 	}
 
@@ -65,8 +59,7 @@ public class ArithmeticUtils
 	 * @param tick
 	 * @return
 	 */
-	public static float tickToMinute(float tick)
-	{
+	public static float tickToMinute(float tick) {
 		return tickToSecond(tick) / 60;
 	}
 
@@ -76,13 +69,11 @@ public class ArithmeticUtils
 	 * @param second
 	 * @return
 	 */
-	public static float secondToTick(float second)
-	{
+	public static float secondToTick(float second) {
 		return second * 20F;
 	}
 
-	public static float minuteToTick(float minute)
-	{
+	public static float minuteToTick(float minute) {
 		return secondToTick(minute * 60F);
 	}
 
@@ -92,8 +83,7 @@ public class ArithmeticUtils
 	 * @param world
 	 * @return
 	 */
-	public static int getWorldTimeDay(World world)
-	{
+	public static int getWorldTimeDay(World world) {
 		return (int) ((world.getWorldInfo().getWorldTime() + 6000L) / 24000L);
 	}
 
@@ -103,8 +93,7 @@ public class ArithmeticUtils
 	 * @param world
 	 * @return
 	 */
-	public static int getWorldTimeHour(World world)
-	{
+	public static int getWorldTimeHour(World world) {
 		return (int) (((world.getWorldInfo().getWorldTime() + 6000L) % 24000L) / 1000L);
 	}
 
@@ -114,8 +103,7 @@ public class ArithmeticUtils
 	 * @param world
 	 * @return
 	 */
-	public static int getWorldTimeMinutes(World world)
-	{
+	public static int getWorldTimeMinutes(World world) {
 		return (int) (((world.getWorldInfo().getWorldTime() + 6000L) % 1000L) * 60L / 1000L);
 	}
 }

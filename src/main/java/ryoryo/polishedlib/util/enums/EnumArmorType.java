@@ -14,31 +14,26 @@ public enum EnumArmorType
 	private final EntityEquipmentSlot slot;
 	private final int slotIndex;
 
-	private EnumArmorType(String name, int renderIndex, EntityEquipmentSlot equipmentSlot, int slotIndex)
-	{
+	private EnumArmorType(String name, int renderIndex, EntityEquipmentSlot equipmentSlot, int slotIndex) {
 		this.name = name;
 		this.renderIndex = renderIndex;
 		this.slot = equipmentSlot;
 		this.slotIndex = slotIndex;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return this.name;
 	}
 
-	public int getRenderIndex()
-	{
+	public int getRenderIndex() {
 		return this.renderIndex;
 	}
 
-	public EntityEquipmentSlot getSlot()
-	{
+	public EntityEquipmentSlot getSlot() {
 		return this.slot;
 	}
 
-	public int getSlotIndex()
-	{
+	public int getSlotIndex() {
 		return this.slotIndex;
 	}
 }

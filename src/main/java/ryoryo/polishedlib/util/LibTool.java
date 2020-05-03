@@ -1,7 +1,6 @@
 package ryoryo.polishedlib.util;
 
-public class LibTool
-{
+public class LibTool {
 	public static final String TOOL_CLASS_PICKAXE = "pickaxe";
 	public static final String TOOL_CLASS_AXE = "axe";
 	public static final String TOOL_CLASS_SHOVEL = "shovel";

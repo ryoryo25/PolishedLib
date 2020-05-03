@@ -14,20 +14,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class BlockBaseMeta extends BlockBase
-{
-	public BlockBaseMeta(Material material, String name)
-	{
+public abstract class BlockBaseMeta extends BlockBase {
+	public BlockBaseMeta(Material material, String name) {
 		super(material, name);
 	}
 
-	public BlockBaseMeta(Material material, String name, CreativeTabs tab)
-	{
+	public BlockBaseMeta(Material material, String name, CreativeTabs tab) {
 		super(material, name, tab);
 	}
 
-	public BlockBaseMeta(Material material, String name, CreativeTabs tab, SoundType soundType)
-	{
+	public BlockBaseMeta(Material material, String name, CreativeTabs tab, SoundType soundType) {
 		super(material, name, tab, soundType);
 	}
 

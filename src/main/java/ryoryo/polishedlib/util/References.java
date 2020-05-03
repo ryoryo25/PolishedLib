@@ -5,8 +5,7 @@ import java.util.Calendar;
 
 import net.minecraft.client.Minecraft;
 
-public class References
-{
+public class References {
 	public static final String MOD_ID = "polishedlib";
 	public static final String MOD_NAME = "PolishedLib";
 
@@ -34,21 +33,19 @@ public class References
 	public static final String ARMOR_TEXTURE_FOLDER = TEXTURE_FOLDER + "armor/";
 	public static final String MODEL_FOLDER = PREFIX + "models/";
 
-	public static String getVersion()
-	{
+	public static String getVersion() {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
 
 		return Minecraft.getMinecraft().getVersion() + "-" + sdf.format(cal.getTime());
 	}
 
-	public static String getDependencies(String id)
-	{
+	public static String getDependencies(String id) {
 		return "after:" + id + ";";
 	}
 
-	//	static
-	//	{
-	//		MOD_VERSION = getVersion();
-	//	}
+	// static
+	// {
+	// MOD_VERSION = getVersion();
+	// }
 }

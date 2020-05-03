@@ -20,8 +20,7 @@ public enum EnumAxis implements IStringSerializable
 	private static final Map<String, EnumAxis> NAME_LOOKUP = Maps.newHashMap();
 	private final String name;
 
-	private EnumAxis(String name)
-	{
+	private EnumAxis(String name) {
 		this.name = name;
 	}
 
@@ -29,26 +28,21 @@ public enum EnumAxis implements IStringSerializable
 	 * Get the axis specified by the given name
 	 */
 	@Nullable
-	public static EnumAxis byName(String name)
-	{
+	public static EnumAxis byName(String name) {
 		return name == null ? null : (EnumAxis) NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		return this.name;
 	}
 
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return this.name;
 	}
 
-	public EnumFacing.Axis toFacingAxis()
-	{
-		switch(this)
-		{
+	public EnumFacing.Axis toFacingAxis() {
+		switch(this) {
 			default:
 			case X:
 				return EnumFacing.Axis.X;
@@ -59,9 +53,8 @@ public enum EnumAxis implements IStringSerializable
 		}
 	}
 
-	public static EnumAxis fromFacingAxis(EnumFacing.Axis axis){
-		switch(axis)
-		{
+	public static EnumAxis fromFacingAxis(EnumFacing.Axis axis) {
+		switch(axis) {
 			case X:
 				return EnumAxis.X;
 			case Y:
@@ -73,10 +66,8 @@ public enum EnumAxis implements IStringSerializable
 		}
 	}
 
-	static
-	{
-		for(EnumAxis axis : values())
-		{
+	static {
+		for(EnumAxis axis : values()) {
 			NAME_LOOKUP.put(axis.getName().toLowerCase(Locale.ROOT), axis);
 		}
 	}
