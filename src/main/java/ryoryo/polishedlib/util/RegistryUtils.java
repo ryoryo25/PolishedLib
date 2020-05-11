@@ -3,6 +3,8 @@ package ryoryo.polishedlib.util;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
@@ -48,7 +50,7 @@ public class RegistryUtils {
 
 	/**
 	 * jsonでレシピ登録とかめんどいから前みたいにできるように
-	 * 
+	 *
 	 * @param name
 	 * @param output
 	 * @param params
@@ -59,7 +61,7 @@ public class RegistryUtils {
 
 	/**
 	 * jsonでレシピ登録とかめんどいから前みたいにできるように
-	 * 
+	 *
 	 * @param name
 	 * @param output
 	 * @param params
@@ -77,7 +79,7 @@ public class RegistryUtils {
 
 	/**
 	 * jsonでレシピ登録とかめんどいから前みたいにできるようにするやつのshapeless版
-	 * 
+	 *
 	 * @param name
 	 * @param output
 	 * @param params
@@ -219,7 +221,7 @@ public class RegistryUtils {
 
 	/**
 	 * 壁のレシピ登録 名前の前に"wall_"と足される
-	 * 
+	 *
 	 * @param name
 	 * @param output
 	 * @param material
@@ -304,7 +306,8 @@ public class RegistryUtils {
 	}
 
 	/**
-	 * ブロック登録 アイテムブロックを別に作成時用
+	 * ブロック登録
+	 * アイテムブロックを別に作成時用
 	 *
 	 * @param block
 	 * @param itemBlock
@@ -319,7 +322,44 @@ public class RegistryUtils {
 	}
 
 	/**
-	 * ブロック登録 meta違いで名前も変えたいとき用
+	 * ブロック登録
+	 * stateを無視する処理を入れるかどうか
+	 *
+	 * @param block
+	 * @param itemBlock
+	 * @param name
+	 * @param meta
+	 * @param namingFunc
+	 * @param ignoreState
+	 */
+	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc, Consumer<Block> ignoreState) {
+		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
+		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
+
+		if(Utils.isClient()) {
+			ignoreState.accept(block);
+			for(int i = 0; i < meta; i++)
+				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(namingFunc.apply(i, block.getRegistryName().toString()), "inventory"));
+		}
+	}
+
+	/**
+	 * ブロック登録
+	 * Functionで添字iに対応する文字列を返す
+	 *
+	 * @param block
+	 * @param itemBlock
+	 * @param name
+	 * @param meta
+	 * @param namingFunc
+	 */
+	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc) {
+		registerBlock(block, itemBlock, name, meta, namingFunc, (b) -> {});
+	}
+
+	/**
+	 * ブロック登録
+	 * meta違いで名前も変えたいとき用
 	 *
 	 * @param block
 	 * @param itemBlock
@@ -327,17 +367,12 @@ public class RegistryUtils {
 	 * @param names
 	 */
 	public void registerBlock(Block block, ItemBlock itemBlock, String name, String[] names) {
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
-		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
-
-		if(Utils.isClient()) {
-			for(int i = 0; i < names.length; i++)
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(block.getRegistryName().toString() + "_" + names[i], "inventory"));
-		}
+		registerBlock(block, itemBlock, name, names.length, (i, base) -> base + "_" + names[i]);
 	}
 
 	/**
-	 * ブロック登録 meta違いで数字で違う名前にする用
+	 * ブロック登録
+	 * meta違いで数字で違う名前にする用
 	 *
 	 * @param block
 	 * @param itemBlock
@@ -345,14 +380,12 @@ public class RegistryUtils {
 	 * @param meta
 	 */
 	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta) {
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
-		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
-
-		if(Utils.isClient()) {
-			for(int i = 0; i < meta; i++)
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(block.getRegistryName().toString() + "_" + i, "inventory"));
-		}
+		registerBlock(block, itemBlock, name, meta, (i, base) -> base + "_" + i);
 	}
+
+	//	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta) {
+	//		registerBlock(block, itemBlock, name, meta, i -> "");
+	//	}
 
 	/**
 	 * ノーマルアイテム登録
@@ -368,35 +401,45 @@ public class RegistryUtils {
 	}
 
 	/**
-	 * アイテム登録 meta違いでテクスチャを変える用
+	 * アイテム登録
+	 * Functionで添字iに対応する文字列を返す
+	 *
+	 * @param item
+	 * @param name
+	 * @param meta
+	 * @param namingFunc
+	 */
+	public void registerItem(Item item, String name, int meta, BiFunction<Integer, String, String> namingFunc) {
+		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
+
+		if(Utils.isClient()) {
+			for(int i = 0; i < meta; i++)
+				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(namingFunc.apply(i, item.getRegistryName().toString()), "inventory"));
+		}
+	}
+
+	/**
+	 * アイテム登録
+	 * meta違いでテクスチャを変える用
 	 *
 	 * @param item
 	 * @param location
 	 * @param names
 	 */
 	public void registerItem(Item item, String name, String[] names) {
-		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
-
-		if(Utils.isClient()) {
-			for(int i = 0; i < names.length; i++)
-				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName().toString() + "_" + names[i], "inventory"));
-		}
+		registerItem(item, name, names.length, (i, base) -> base + "_" + names[i]);
 	}
 
 	/**
-	 * アイテム登録 meta違いだけど同じテクスチャ用
+	 * アイテム登録
+	 *  meta違いだけど同じテクスチャ用
 	 *
 	 * @param item
 	 * @param name
 	 * @param meta
 	 */
 	public void registerItem(Item item, String name, int meta) {
-		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
-
-		if(Utils.isClient()) {
-			for(int i = 0; i < meta; i++)
-				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName().toString(), "inventory"));
-		}
+		registerItem(item, name, meta, (i, base) -> base);
 	}
 
 	/**
@@ -416,7 +459,7 @@ public class RegistryUtils {
 
 	/**
 	 * サブブロック登録を簡略化
-	 * 
+	 *
 	 * @param block
 	 * @param firstMeta
 	 * @param endMeta
@@ -433,7 +476,7 @@ public class RegistryUtils {
 
 	/**
 	 * サブブロック登録を簡略化 0から始める
-	 * 
+	 *
 	 * @param block
 	 * @param meta
 	 * @param tab
@@ -445,7 +488,7 @@ public class RegistryUtils {
 
 	/**
 	 * サブアイテム登録を簡略化
-	 * 
+	 *
 	 * @param item
 	 * @param firstMeta
 	 * @param endMeta
@@ -462,7 +505,7 @@ public class RegistryUtils {
 
 	/**
 	 * サブアイテム登録を簡略化 0から始める
-	 * 
+	 *
 	 * @param item
 	 * @param meta
 	 * @param tab
@@ -522,7 +565,7 @@ public class RegistryUtils {
 
 	/**
 	 * キー登録
-	 * 
+	 *
 	 * @param key
 	 */
 	@SideOnly(Side.CLIENT)
