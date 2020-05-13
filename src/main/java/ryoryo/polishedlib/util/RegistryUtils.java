@@ -4,13 +4,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.IStateMapper;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.settings.KeyBinding;
@@ -332,12 +333,12 @@ public class RegistryUtils {
 	 * @param namingFunc
 	 * @param ignoreState
 	 */
-	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc, Consumer<Block> ignoreState) {
+	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc, IStateMapper mapper) {
 		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
 		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
 
 		if(Utils.isClient()) {
-			ignoreState.accept(block);
+			ModelLoader.setCustomStateMapper(block, mapper);
 			for(int i = 0; i < meta; i++)
 				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(namingFunc.apply(i, block.getRegistryName().toString()), "inventory"));
 		}
@@ -354,7 +355,7 @@ public class RegistryUtils {
 	 * @param namingFunc
 	 */
 	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc) {
-		registerBlock(block, itemBlock, name, meta, namingFunc, (b) -> {});
+		registerBlock(block, itemBlock, name, meta, namingFunc, new StateMap.Builder().build());
 	}
 
 	/**
@@ -383,9 +384,20 @@ public class RegistryUtils {
 		registerBlock(block, itemBlock, name, meta, (i, base) -> base + "_" + i);
 	}
 
-	//	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta) {
-	//		registerBlock(block, itemBlock, name, meta, i -> "");
-	//	}
+	/**
+	 * ブロック登録
+	 * stateごとにmodelを変えたくないやつよう
+	 * 変えたくないpropをignoreする
+	 *
+	 * @param block
+	 * @param itemBlock
+	 * @param name
+	 * @param meta
+	 * @param ignoreState
+	 */
+	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, IStateMapper mapper) {
+		registerBlock(block, itemBlock, name, meta, (i, base) -> base, mapper);
+	}
 
 	/**
 	 * ノーマルアイテム登録
