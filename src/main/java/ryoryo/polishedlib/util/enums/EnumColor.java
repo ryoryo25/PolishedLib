@@ -36,8 +36,8 @@ public enum EnumColor implements IStringSerializable
 	private final int woolNum;
 	private static final EnumColor[] META_LOOKUP = new EnumColor[values().length];
 	private static final EnumColor[] DYE_DMG_LOOKUP = new EnumColor[values().length];
-	public static final String[] COLOR_WOOL = new String[values().length];
-	public static final String[] COLOR_DYE = new String[values().length];
+	public static final String[] NAMES_WOOL = new String[values().length];
+	public static final String[] NAMES_DYE = new String[values().length];
 
 	// 薄灰色用
 	private EnumColor(String name, String nameCamelCase, int dyeNum, int woolNum) {
@@ -245,8 +245,8 @@ public enum EnumColor implements IStringSerializable
 			META_LOOKUP[color.getWoolNumber()] = color;
 			DYE_DMG_LOOKUP[color.getDyeNumber()] = color;
 
-			COLOR_WOOL[color.getWoolNumber()] = color.getName();
-			COLOR_DYE[color.getDyeNumber()] = color.getName();
+			NAMES_WOOL[color.getWoolNumber()] = color.getName();
+			NAMES_DYE[color.getDyeNumber()] = color.getName();
 		}
 	}
 }
