@@ -307,7 +307,7 @@ public class Utils {
 	 *
 	 * @return
 	 */
-	public static boolean isJumpKeyDow() {
+	public static boolean isJumpKeyDown() {
 		return isClient() ? Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown() : false;
 	}
 
@@ -443,8 +443,7 @@ public class Utils {
 
 		if(isOreDictLoaded(oreName)) {
 			return new ItemStack(item.get(0).getItem(), 1, item.get(0).getItemDamage());
-		}
-		else
+		} else
 			return ItemStack.EMPTY;
 	}
 
@@ -471,8 +470,7 @@ public class Utils {
 			}
 
 		}
-		catch(NullPointerException e) {
-		}
+		catch(NullPointerException e) {}
 
 		return result;
 	}
