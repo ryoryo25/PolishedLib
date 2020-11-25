@@ -14,6 +14,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -29,6 +30,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
@@ -1076,5 +1078,23 @@ public class Utils {
 	 */
 	public static boolean isPlayerMoving(EntityPlayer player) {
 		return player.posX != player.lastTickPosX || player.posY != player.lastTickPosY || player.posZ != player.lastTickPosZ;
+	}
+
+	/**
+	 * stackにenchantmentがついているかどうか
+	 *
+	 * @param stack
+	 * @param enchantment
+	 * @return
+	 */
+	public static boolean hasEnchant(ItemStack stack, Enchantment enchantment) {
+		NBTTagList enchants = stack.getEnchantmentTagList();
+		for(int i = 0; i < enchants.tagCount(); i++) {
+			NBTTagCompound enchant = enchants.getCompoundTagAt(i);
+			if(enchant.getInteger("id") == Enchantment.getEnchantmentID(enchantment))
+				return true;
+		}
+
+		return false;
 	}
 }
