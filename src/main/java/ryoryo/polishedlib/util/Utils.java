@@ -4,11 +4,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.block.material.Material;
@@ -997,10 +999,7 @@ public class Utils {
 		if(modifierOptional.isPresent()) { // If it exists,
 			final AttributeModifier modifier = modifierOptional.get();
 			modifiers.remove(modifier); // Remove it
-			modifiers.add(new AttributeModifier(modifier.getID(), modifier.getName(), modifier.getAmount() * multiplier, modifier.getOperation())); // Add
-																																					// the
-																																					// new
-																																					// modifier
+			modifiers.add(new AttributeModifier(modifier.getID(), modifier.getName(), modifier.getAmount() * multiplier, modifier.getOperation())); // Add the new modifier
 		}
 	}
 
@@ -1096,5 +1095,87 @@ public class Utils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * centerを中心，radiusを半径とする球の内部のBlockPosのIterableを返す
+	 * {@link BlockPos#getAllInBox(BlockPos, BlockPos)}の球バージョン
+	 *
+	 * @param center
+	 * @param radius
+	 * @param radiusSq
+	 * @return
+	 */
+	public static Iterable<BlockPos> getAllInSphere(BlockPos center, double radius, double radiusSq) {
+		int radiusInt = MathHelper.floor(radius);
+		int x1, y1, z1, x2, y2, z2;
+		x1 = y1 = z1 = -radiusInt;
+		x2 = y2 = z2 = radiusInt;
+		int cx = center.getX();
+		int cy = center.getY();
+		int cz = center.getZ();
+
+		return new Iterable<BlockPos>() {
+			@Override
+			public Iterator<BlockPos> iterator() {
+				return new AbstractIterator<BlockPos>() {
+					private boolean first = true;
+					private int lastX;
+					private int lastY;
+					private int lastZ;
+					private int tx = 0;
+					private int tz = 0;
+					private int ty = 0;
+
+					@Override
+					protected BlockPos computeNext() {
+						while(true) {
+							if(this.first) {
+								this.first = false;
+								this.lastX = x1;
+								this.lastY = y1;
+								this.lastZ = z1;
+							} else if(this.lastX == x2 && this.lastY == y2 && this.lastZ == z2) {
+								return (BlockPos) this.endOfData();
+							} else {
+								if(this.lastX < x2) {
+									++this.lastX;
+								} else if(this.lastY < y2) {
+									this.lastX = x1;
+									++this.lastY;
+								} else if(this.lastZ < z2) {
+									this.lastX = x1;
+									this.lastY = y1;
+									++this.lastZ;
+								}
+							}
+
+							this.ty = cy + this.lastY;
+							if(isInSphere(this.ty, this.lastX, this.lastY, this.lastZ))
+								continue;
+							this.tx = cx + this.lastX;
+							this.tz = cz + this.lastZ;
+							return new BlockPos(this.tx, this.ty, this.tz);
+						}
+					}
+				};
+			}
+
+			private boolean isInSphere(int actualY, int x, int y, int z) {
+				return actualY < 0 || actualY > 255 || x * x + y * y + z * z > radiusSq;
+			}
+		};
+	}
+
+	/**
+	 * centerを中心，radiusを半径とする球の内部のBlockPosのIterableを返す
+	 * {@link BlockPos#getAllInBox(BlockPos, BlockPos)}の球バージョン
+	 *
+	 * @param center
+	 * @param radiusSq
+	 * @return
+	 */
+	public static Iterable<BlockPos> getAllInSphere(BlockPos center, double radiusSq) {
+		return getAllInSphere(center, Math.floor(Math.sqrt(radiusSq)), radiusSq);
 	}
 }
