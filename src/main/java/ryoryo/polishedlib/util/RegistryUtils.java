@@ -146,18 +146,19 @@ public class RegistryUtils {
 	 */
 	public void addRecipeTools(String name, ItemStack material, ItemStack... output) {
 		assert (output.length == 3) : "完成品リストのサイズは3である必要があります";
-		addRecipeAxe(name, material, output[0]);
-		addRecipePickaxe(name, material, output[1]);
-		addRecipeShovel(name, material, output[2]);
+		addRecipeAxe(name, output[0], material);
+		addRecipePickaxe(name, output[1], material);
+		addRecipeShovel(name, output[2], material);
 	}
 
 	/**
 	 * 剣レシピの登録 名前の前に"sword_"と足される
 	 *
-	 * @param material
+	 * @param name
 	 * @param output
+	 * @param material
 	 */
-	public void addRecipeSword(String name, ItemStack material, ItemStack output) {
+	public void addRecipeSword(String name, ItemStack output, ItemStack material) {
 		addRecipe("sword_" + name, output, "#", "#", "s", 's', Items.STICK, '#', material);
 	}
 
@@ -186,7 +187,7 @@ public class RegistryUtils {
 	public void addRecipeAllToolsAndArmor(String name, ItemStack material, ItemStack... output) {
 		assert (output.length == 8) : "完成品リストのサイズは8である必要があります";
 		addRecipeTools(name, material, Arrays.copyOfRange(output, 0, 2));
-		addRecipeSword(name, material, output[3]);
+		addRecipeSword(name, output[3], material);
 		addRecipeArmor(name, material, Arrays.copyOfRange(output, 4, 8));
 	}
 
@@ -339,7 +340,7 @@ public class RegistryUtils {
 
 		if(Utils.isClient()) {
 			ModelLoader.setCustomStateMapper(block, mapper);
-			for(int i = 0; i < meta; i++)
+			for(int i = 0; i < meta; i ++)
 				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(namingFunc.apply(i, block.getRegistryName().toString()), "inventory"));
 		}
 	}
@@ -425,7 +426,7 @@ public class RegistryUtils {
 		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
 
 		if(Utils.isClient()) {
-			for(int i = 0; i < meta; i++)
+			for(int i = 0; i < meta; i ++)
 				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(namingFunc.apply(i, item.getRegistryName().toString()), "inventory"));
 		}
 	}
@@ -480,7 +481,7 @@ public class RegistryUtils {
 	 */
 	public static void registerSubBlocks(Block block, int firstMeta, int endMeta, CreativeTabs tab, NonNullList<ItemStack> list) {
 		if(tab == block.getCreativeTabToDisplayOn()) {
-			for(int i = firstMeta; i < endMeta; i++) {
+			for(int i = firstMeta; i < endMeta; i ++) {
 				list.add(new ItemStack(block, 1, i));
 			}
 		}
@@ -509,7 +510,7 @@ public class RegistryUtils {
 	 */
 	public static void registerSubItems(Item item, int firstMeta, int endMeta, CreativeTabs tab, NonNullList<ItemStack> items) {
 		if(tab == item.getCreativeTab()) {
-			for(int i = firstMeta; i < endMeta; i++) {
+			for(int i = firstMeta; i < endMeta; i ++) {
 				items.add(new ItemStack(item, 1, i));
 			}
 		}
