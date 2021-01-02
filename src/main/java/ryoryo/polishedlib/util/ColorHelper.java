@@ -2,6 +2,8 @@ package ryoryo.polishedlib.util;
 
 import java.awt.Color;
 
+import net.minecraft.util.math.MathHelper;
+
 public class ColorHelper {
 
 	/**
@@ -67,6 +69,16 @@ public class ColorHelper {
 	 */
 	public static int getRGB(int r, int g, int b) {
 		return getARGB(r, g, b, 0xFF);
+	}
+
+	/**
+	 * Clamp num to 0 - 255
+	 *
+	 * @param num
+	 * @return
+	 */
+	public static int clamp(int num) {
+		return MathHelper.clamp(num, 0, 255);
 	}
 
 	/**
