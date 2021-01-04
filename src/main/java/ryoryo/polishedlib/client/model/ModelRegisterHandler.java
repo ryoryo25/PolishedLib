@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+import com.google.common.base.Stopwatch;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -47,7 +49,7 @@ public class ModelRegisterHandler {
 		Set<ModelResourceLocation> modelLocations = modelRegistry.getKeys();
 
 		PolishedLib.LOGGER.info("Start custom model loading");
-		long start = System.nanoTime();
+		Stopwatch stopwatch = Stopwatch.createStarted();
 		ProgressBar bakeBar = ProgressManager.push(References.MOD_NAME + ": registering", modelLocations.size());
 
 		for(ModelResourceLocation location : modelLocations) {
@@ -74,8 +76,8 @@ public class ModelRegisterHandler {
 		}
 
 		ProgressManager.pop(bakeBar);
-		long time = System.nanoTime() - start;
-		PolishedLib.LOGGER.info(String.format("Finish custom model loading : took %1.2f ms", time / 1000000D));
+		stopwatch.stop();
+		PolishedLib.LOGGER.info("Finish custom model loading : took " + stopwatch);
 	}
 
 	private boolean checkOverrideModel(IRegistry<ModelResourceLocation, IBakedModel> modelRegistry, ModelResourceLocation location, IBakedModel missingModel) {
