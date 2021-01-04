@@ -74,8 +74,7 @@ public class Utils {
 	public static boolean isClassLoaded(String classname) {
 		try {
 			Class.forName(classname);
-		}
-		catch(ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			return false;
 		}
 		return true;
@@ -428,10 +427,10 @@ public class Utils {
 	public static boolean isOreDictLoaded(String oreName) {
 		List<ItemStack> item = OreDictionary.getOres(oreName);
 
-		if(item.size() > 0)
+		if (item.size() > 0) {
 			return true;
-		else {
-			PolishedLib.LOGGER.info("The mod which have a " + oreName + " isn't installed.");
+		} else {
+			PolishedLib.LOGGER.info("Not found: " + oreName);
 			return false;
 		}
 	}
@@ -445,10 +444,11 @@ public class Utils {
 	public static ItemStack getItemFromOreDict(String oreName) {
 		List<ItemStack> item = OreDictionary.getOres(oreName);
 
-		if(isOreDictLoaded(oreName)) {
+		if (isOreDictLoaded(oreName)) {
 			return new ItemStack(item.get(0).getItem(), 1, item.get(0).getItemDamage());
-		} else
+		} else {
 			return ItemStack.EMPTY;
+		}
 	}
 
 	/**
@@ -462,19 +462,18 @@ public class Utils {
 		List<ItemStack> result = new ArrayList<ItemStack>();
 
 		try {
-			for(int oreId : OreDictionary.getOreIDs(stack)) {
-				if(oreId >= 0) {
+			for (int oreId : OreDictionary.getOreIDs(stack)) {
+				if (oreId >= 0) {
 					String oreName = OreDictionary.getOreName(oreId);
-					for(String regex : oredicts) {
-						if(oreName.toLowerCase().matches(regex)) {
+					for (String regex : oredicts) {
+						if (oreName.toLowerCase().matches(regex)) {
 							result = OreDictionary.getOres(oreName);
 						}
 					}
 				}
 			}
 
-		}
-		catch(NullPointerException e) {}
+		} catch (NullPointerException e) {}
 
 		return result;
 	}
@@ -705,9 +704,9 @@ public class Utils {
 	 * @return
 	 */
 	public static Rotation getRotationFromBase(EnumFacing baseFacing, EnumFacing facing) {
-		switch(baseFacing) {
+		switch (baseFacing) {
 			case NORTH:
-				switch(facing) {
+				switch (facing) {
 					default:
 					case NORTH:
 						return Rotation.NONE;
@@ -719,7 +718,7 @@ public class Utils {
 						return Rotation.CLOCKWISE_90;
 				}
 			case SOUTH:
-				switch(facing) {
+				switch (facing) {
 					case NORTH:
 						return Rotation.CLOCKWISE_180;
 					default:
@@ -731,7 +730,7 @@ public class Utils {
 						return Rotation.COUNTERCLOCKWISE_90;
 				}
 			case WEST:
-				switch(facing) {
+				switch (facing) {
 					case NORTH:
 						return Rotation.CLOCKWISE_90;
 					case SOUTH:
@@ -743,7 +742,7 @@ public class Utils {
 						return Rotation.CLOCKWISE_180;
 				}
 			case EAST:
-				switch(facing) {
+				switch (facing) {
 					case NORTH:
 						return Rotation.COUNTERCLOCKWISE_90;
 					case SOUTH:
@@ -760,7 +759,7 @@ public class Utils {
 	}
 
 	public static Rotation getRotationFromNorth(EnumFacing facing) {
-		switch(facing) {
+		switch (facing) {
 			default:
 			case NORTH:
 				return Rotation.NONE;
@@ -803,7 +802,7 @@ public class Utils {
 		double maxY = baseAabb.maxY;
 		double maxZ = baseAabb.maxZ;
 
-		switch(rotation) {
+		switch (rotation) {
 			default:
 			case NONE:
 				return baseAabb;
@@ -831,7 +830,7 @@ public class Utils {
 		double maxY = baseAabb.maxY;
 		double maxZ = baseAabb.maxZ;
 
-		switch(axis) {
+		switch (axis) {
 			default:
 			case NONE:
 				return baseAabb;
@@ -935,7 +934,7 @@ public class Utils {
 	 * @return
 	 */
 	public static NBTTagCompound getTagCompound(NBTTagCompound nbt, String keyName) {
-		if(nbt == null || !nbt.hasKey(keyName))
+		if (nbt == null || !nbt.hasKey(keyName))
 			return new NBTTagCompound();
 
 		return nbt.getCompoundTag(keyName);
@@ -961,8 +960,8 @@ public class Utils {
 	 * @return
 	 */
 	public static boolean isEquippedArmor(EntityPlayer player, ItemArmor armor) {
-		for(ItemStack item : player.getArmorInventoryList()) {
-			if(!item.isEmpty() && item.getItem() == armor)
+		for (ItemStack item : player.getArmorInventoryList()) {
+			if (!item.isEmpty() && item.getItem() == armor)
 				return true;
 		}
 
@@ -996,7 +995,7 @@ public class Utils {
 		// Find the modifier with the specified ID, if any
 		final Optional<AttributeModifier> modifierOptional = modifiers.stream().filter(attributeModifier -> attributeModifier.getID().equals(id)).findFirst();
 
-		if(modifierOptional.isPresent()) { // If it exists,
+		if (modifierOptional.isPresent()) { // If it exists,
 			final AttributeModifier modifier = modifierOptional.get();
 			modifiers.remove(modifier); // Remove it
 			modifiers.add(new AttributeModifier(modifier.getID(), modifier.getName(), modifier.getAmount() * multiplier, modifier.getOperation())); // Add the new modifier
@@ -1014,10 +1013,10 @@ public class Utils {
 	 * @return
 	 */
 	public static float[] getWheelColor(float pos) {
-		if(pos < 85.0f) {
+		if (pos < 85.0f) {
 			return new float[] { pos * 3.0F, 255.0f - pos * 3.0f, 0.0f };
 		}
-		if(pos < 170.0f) {
+		if (pos < 170.0f) {
 			return new float[] { 255.0f - (pos -= 85.0f) * 3.0f, 0.0f, pos * 3.0f };
 		}
 		return new float[] { 0.0f, (pos -= 170.0f) * 3.0f, 255.0f - pos * 3.0f };
@@ -1030,7 +1029,7 @@ public class Utils {
 	 * @return
 	 */
 	public static int getWheelColorDurabilityBar(EntityPlayer player) {
-		if(player != null && player.world != null) {
+		if (player != null && player.world != null) {
 			float[] color = Utils.getWheelColor(player.world.getTotalWorldTime() % 256);
 			return MathHelper.rgb(color[0] / 255F, color[1] / 255F, color[2] / 255F);
 		}
@@ -1053,18 +1052,17 @@ public class Utils {
 			field.set(player, equipments);
 			// ReflectionHelper.setPrivateValue(lclass, pPlayer, lequipments,
 			// "previousEquipment");
-			if(player instanceof EntityPlayer) {
+			if (player instanceof EntityPlayer) {
 				Container lctr = player.openContainer;
-				for(int i = 0; i < lctr.inventorySlots.size(); i++) {
+				for (int i = 0; i < lctr.inventorySlots.size(); i ++) {
 					ItemStack lis = lctr.getSlot(i).getStack();
-					if(lis == gun) {
+					if (lis == gun) {
 						lctr.inventoryItemStacks.set(i, gun.copy());
 						break;
 					}
 				}
 			}
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -1088,9 +1086,9 @@ public class Utils {
 	 */
 	public static boolean hasEnchant(ItemStack stack, Enchantment enchantment) {
 		NBTTagList enchants = stack.getEnchantmentTagList();
-		for(int i = 0; i < enchants.tagCount(); i++) {
+		for (int i = 0; i < enchants.tagCount(); i ++) {
 			NBTTagCompound enchant = enchants.getCompoundTagAt(i);
-			if(enchant.getInteger("id") == Enchantment.getEnchantmentID(enchantment))
+			if (enchant.getInteger("id") == Enchantment.getEnchantmentID(enchantment))
 				return true;
 		}
 
@@ -1129,29 +1127,29 @@ public class Utils {
 
 					@Override
 					protected BlockPos computeNext() {
-						while(true) {
-							if(this.first) {
+						while (true) {
+							if (this.first) {
 								this.first = false;
 								this.lastX = x1;
 								this.lastY = y1;
 								this.lastZ = z1;
-							} else if(this.lastX == x2 && this.lastY == y2 && this.lastZ == z2) {
+							} else if (this.lastX == x2 && this.lastY == y2 && this.lastZ == z2) {
 								return (BlockPos) this.endOfData();
 							} else {
-								if(this.lastX < x2) {
-									++this.lastX;
-								} else if(this.lastY < y2) {
+								if (this.lastX < x2) {
+									++ this.lastX;
+								} else if (this.lastY < y2) {
 									this.lastX = x1;
-									++this.lastY;
-								} else if(this.lastZ < z2) {
+									++ this.lastY;
+								} else if (this.lastZ < z2) {
 									this.lastX = x1;
 									this.lastY = y1;
-									++this.lastZ;
+									++ this.lastZ;
 								}
 							}
 
 							this.ty = cy + this.lastY;
-							if(isInSphere(this.ty, this.lastX, this.lastY, this.lastZ))
+							if (isInSphere(this.ty, this.lastX, this.lastY, this.lastZ))
 								continue;
 							this.tx = cx + this.lastX;
 							this.tz = cz + this.lastZ;
