@@ -14,16 +14,16 @@ public class RecipeNameBuilder {
 
 	public RecipeNameBuilder(ItemStack output, Object... params) {
 		this.output = cut(output.getUnlocalizedName().toLowerCase());
-		for(Object param : params) {
+		for (Object param : params) {
 			ItemStack input = ItemStack.EMPTY;
-			if(param instanceof ItemStack)
+			if (param instanceof ItemStack)
 				input = (ItemStack) param;
-			if(param instanceof Block)
+			if (param instanceof Block)
 				input = new ItemStack((Block) param);
-			if(param instanceof Item)
+			if (param instanceof Item)
 				input = new ItemStack((Item) param);
 
-			if(!input.isEmpty())
+			if (!input.isEmpty())
 				inputs.add(cut(input.getUnlocalizedName().toLowerCase()));
 		}
 	}
@@ -34,12 +34,21 @@ public class RecipeNameBuilder {
 	}
 
 	public String build() {
-		String name = "";
-		for(String input : this.inputs) {
-			name = append(name, input);
+		StringBuilder builder = new StringBuilder();
+
+		for (String input : this.inputs) {
+			if (builder.toString().equals("")) {
+				builder.append(input);
+			} else {
+				builder.append("+");
+				builder.append(input);
+			}
 		}
 
-		return name + "->" + this.output;
+		builder.append("->");
+		builder.append(this.output);
+
+		return build().toString();
 	}
 
 	// private String recipeNameBuilder(ItemStack output, Object... params)
@@ -75,16 +84,6 @@ public class RecipeNameBuilder {
 	private String cut(String unlocalizedName) {
 		// return unlocalizedName.substring(0,
 		// unlocalizedName.length()-5).substring(5);
-		return unlocalizedName.substring(5);
+		return unlocalizedName.substring("tile.".length());
 	}
-
-	private String append(String str, String append) {
-		if(append == "")
-			return str;
-		if(str == "")
-			return str + append;
-
-		return str + "+" + append;
-	}
-
 }
