@@ -2,7 +2,7 @@ package ryoryo.polishedlib.util;
 
 import net.minecraft.potion.Potion;
 
-public class LibPotionId {
+public class PotionIds {
 	/** 移動速度上昇 */
 	public static final int SPEED = Potion.getIdFromPotion(Potions.SPEED);
 	/** 移動速度低下 */

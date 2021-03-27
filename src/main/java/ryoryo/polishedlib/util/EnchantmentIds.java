@@ -3,7 +3,7 @@ package ryoryo.polishedlib.util;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Enchantments;
 
-public class LibEnchantId {
+public class EnchantmentIds {
 	/** ダメージ軽減 */
 	public static final int PROTECTION = Enchantment.getEnchantmentID(Enchantments.PROTECTION);
 	/** 火炎耐性 */
