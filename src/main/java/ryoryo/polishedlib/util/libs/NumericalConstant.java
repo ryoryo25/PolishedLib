@@ -1,4 +1,4 @@
-package ryoryo.polishedlib.util;
+package ryoryo.polishedlib.util.libs;
 
 public class NumericalConstant {
 	// Constants

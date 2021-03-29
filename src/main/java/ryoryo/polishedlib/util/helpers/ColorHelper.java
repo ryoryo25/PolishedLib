@@ -1,4 +1,4 @@
-package ryoryo.polishedlib.util;
+package ryoryo.polishedlib.util.helpers;
 
 import java.awt.Color;
 

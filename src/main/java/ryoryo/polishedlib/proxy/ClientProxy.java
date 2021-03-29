@@ -2,7 +2,7 @@ package ryoryo.polishedlib.proxy;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import ryoryo.polishedlib.client.model.ModelRegisterHandler;
+import ryoryo.polishedlib.client.handlers.CustomModelRegisterHandler;
 
 public class ClientProxy extends CommonProxy {
 
@@ -10,6 +10,6 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 
-		MinecraftForge.EVENT_BUS.register(new ModelRegisterHandler());
+		MinecraftForge.EVENT_BUS.register(new CustomModelRegisterHandler());
 	}
 }

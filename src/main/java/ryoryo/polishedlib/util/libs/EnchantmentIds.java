@@ -1,4 +1,4 @@
-package ryoryo.polishedlib.util;
+package ryoryo.polishedlib.util.libs;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Enchantments;
