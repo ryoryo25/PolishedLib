@@ -6,10 +6,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Multimap;
 
@@ -39,6 +43,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
@@ -49,6 +54,7 @@ import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -121,12 +127,20 @@ public class Utils {
 	 * @param player
 	 * @param message
 	 */
+	public static void sendChat(EntityPlayer player, ITextComponent message) {
+		player.sendMessage(message);
+	}
+
+	public static void sendChat(ITextComponent message) {
+		sendChat(getPlayer(), message);
+	}
+
 	public static void sendChat(EntityPlayer player, String message, Object... args) {
-		player.sendMessage(new TextComponentTranslation(message, args));
+		sendChat(player, new TextComponentTranslation(message, args));
 	}
 
 	public static void sendChat(String message, Object... args) {
-		sendChat(getPlayer(), message, args);
+		sendChat(new TextComponentTranslation(message, args));
 	}
 
 	public static void sendChat(EntityPlayer player, Object message, Object... args) {
@@ -142,14 +156,21 @@ public class Utils {
 	 *
 	 * @param player
 	 * @param message
-	 * @param args
 	 */
+	public static void sendPopUpMessage(EntityPlayer player, ITextComponent message) {
+		player.sendStatusMessage(message, true);
+	}
+
+	public static void sendPopUpMessage(ITextComponent message) {
+		sendPopUpMessage(getPlayer(), message);
+	}
+
 	public static void sendPopUpMessage(EntityPlayer player, String message, Object... args) {
-		player.sendStatusMessage(new TextComponentTranslation(message, args), true);
+		sendPopUpMessage(player, new TextComponentTranslation(message, args));
 	}
 
 	public static void sendPopUpMessage(String message, Object... args) {
-		sendPopUpMessage(getPlayer(), message, args);
+		sendPopUpMessage(new TextComponentTranslation(message, args));
 	}
 
 	public static void sendPopUpMessage(EntityPlayer player, Object message, Object... args) {
@@ -1175,5 +1196,41 @@ public class Utils {
 	 */
 	public static Iterable<BlockPos> getAllInSphere(BlockPos center, double radiusSq) {
 		return getAllInSphere(center, Math.floor(Math.sqrt(radiusSq)), radiusSq);
+	}
+
+	/**
+	 * modのロード中に現在アクティブなModContainerのIDを得る
+	 *
+	 * @return
+	 */
+	public static String getNamespace() {
+		return Objects.requireNonNull(Loader.instance().activeModContainer()).getModId();
+	}
+
+	/**
+	 * 時間を測って表示する．
+	 *
+	 * @param processName
+	 * @param logger
+	 * @param process
+	 */
+	public static void measureTime(String processName, Logger logger, Runnable process) {
+		logger.info("Start " + processName + "...");
+		Stopwatch stopwatch = Stopwatch.createStarted();
+
+		process.run();
+
+		stopwatch.stop();
+		logger.info("Finish " + processName + " : took " + stopwatch);
+	}
+
+	/**
+	 * 時間を測って表示する．ロガーにはPolishedLib#LOGGERを使う
+	 *
+	 * @param processName
+	 * @param process
+	 */
+	public static void measureTime(String processName, Runnable process) {
+		measureTime(processName, PolishedLib.LOGGER, process);
 	}
 }
