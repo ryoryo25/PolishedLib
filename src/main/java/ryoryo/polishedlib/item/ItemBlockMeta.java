@@ -1,10 +1,11 @@
-package ryoryo.polishedlib.itemblock;
+package ryoryo.polishedlib.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 
 public class ItemBlockMeta extends ItemMultiTexture {
+
 	public ItemBlockMeta(Block block, Mapper mapper) {
 		super(block, block, mapper);
 	}

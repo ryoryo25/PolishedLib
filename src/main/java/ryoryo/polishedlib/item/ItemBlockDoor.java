@@ -1,4 +1,4 @@
-package ryoryo.polishedlib.itemblock;
+package ryoryo.polishedlib.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemBlockDoor extends ItemBlock {
+
 	private final Block block;
 
 	public ItemBlockDoor(Block block) {
@@ -26,18 +27,17 @@ public class ItemBlockDoor extends ItemBlock {
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack stack = player.getHeldItem(hand);
 
-		if(facing != EnumFacing.UP) {
+		if (facing != EnumFacing.UP) {
 			return EnumActionResult.FAIL;
-		}
-		else {
+		} else {
 			IBlockState iblockstate = world.getBlockState(pos);
 			Block block = iblockstate.getBlock();
 
-			if(!block.isReplaceable(world, pos)) {
+			if (!block.isReplaceable(world, pos)) {
 				pos = pos.offset(facing);
 			}
 
-			if(player.canPlayerEdit(pos, facing, stack) && this.block.canPlaceBlockAt(world, pos)) {
+			if (player.canPlayerEdit(pos, facing, stack) && this.block.canPlaceBlockAt(world, pos)) {
 				EnumFacing enumfacing = EnumFacing.fromAngle((double) player.rotationYaw);
 				int i = enumfacing.getFrontOffsetX();
 				int j = enumfacing.getFrontOffsetZ();
@@ -47,8 +47,7 @@ public class ItemBlockDoor extends ItemBlock {
 				world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 				stack.shrink(1);
 				return EnumActionResult.SUCCESS;
-			}
-			else {
+			} else {
 				return EnumActionResult.FAIL;
 			}
 		}
@@ -62,12 +61,11 @@ public class ItemBlockDoor extends ItemBlock {
 		boolean flag = world.getBlockState(blockpos1).getBlock() == door || world.getBlockState(blockpos1.up()).getBlock() == door;
 		boolean flag1 = world.getBlockState(blockpos).getBlock() == door || world.getBlockState(blockpos.up()).getBlock() == door;
 
-		if((!flag || flag1) && j <= i) {
-			if(flag1 && !flag || j < i) {
+		if ((!flag || flag1) && j <= i) {
+			if (flag1 && !flag || j < i) {
 				isRightHinge = false;
 			}
-		}
-		else {
+		} else {
 			isRightHinge = true;
 		}
 
