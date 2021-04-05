@@ -1,471 +1,195 @@
 package ryoryo.polishedlib.util;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.function.BiFunction;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
-import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreIngredient;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import ryoryo.polishedlib.PolishedLib;
+import net.minecraftforge.registries.GameData;
 
 public class RegistryUtils {
-	private String modId = null;
 
-	public RegistryUtils(String modId) {
-		this.modId = modId;
-	}
-
-	/**
-	 * jsonでレシピ登録とかめんどいから前みたいにできるように
-	 *
-	 * @param name
-	 * @param output
-	 * @param params
-	 */
-	public void addRecipe(String name, @Nonnull ItemStack output, Object... params) {
-		addShapedRecipe(name, output, params);
-	}
-
-	/**
-	 * jsonでレシピ登録とかめんどいから前みたいにできるように
-	 *
-	 * @param name
-	 * @param output
-	 * @param params
-	 */
-	public void addShapedRecipe(String name, @Nonnull ItemStack output, Object... params) {
-		ResourceLocation location = Utils.makeModLocation(this.modId, name);
-		ShapedOreRecipe ret = new ShapedOreRecipe(location, output, params);
-		ret.setRegistryName(location);
-		for (Ingredient ing : ret.getIngredients()) {
-			if (ing instanceof OreIngredient && ing.getMatchingStacks().length < 1)
-				return;
-		}
-		ForgeRegistries.RECIPES.register(ret);
-	}
-
-	/**
-	 * jsonでレシピ登録とかめんどいから前みたいにできるようにするやつのshapeless版
-	 *
-	 * @param name
-	 * @param output
-	 * @param params
-	 */
-	public void addShapelessRecipe(String name, @Nonnull ItemStack output, Object... params) {
-		ResourceLocation location = Utils.makeModLocation(this.modId, name);
-		ShapelessOreRecipe ret = new ShapelessOreRecipe(location, output, params);
-		ret.setRegistryName(location);
-		for (Ingredient ing : ret.getIngredients()) {
-			if (ing instanceof OreIngredient && ing.getMatchingStacks().length < 1)
-				return;
-		}
-		ForgeRegistries.RECIPES.register(ret);
-	}
-
-	public void addRecipeAutoName(@Nonnull ItemStack output, Object... params) {
-		addShapedRecipeAutoName(output, params);
-	}
-
-	public void addShapedRecipeAutoName(@Nonnull ItemStack output, Object... params) {
-		addRecipe(new RecipeNameBuilder(output, params).build(), output, params);
-	}
-
-	public void addShapelessRecipeAutoName(@Nonnull ItemStack output, Object... params) {
-		addShapelessRecipe(new RecipeNameBuilder(output, params).build(), output, params);
-	}
-
-	/**
-	 * 斧レシピの登録 名前の前に"axe_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param output
-	 * @param material
-	 */
-	public void addRecipeAxe(String name, ItemStack output, Object material) {
-		addRecipe("axe_" + name, output, "##", "#s", " s", 's', Items.STICK, '#', material);
-	}
-
-	/**
-	 * つるはしレシピの登録 名前の前に"pickaxe_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param output
-	 * @param material
-	 */
-	public void addRecipePickaxe(String name, ItemStack output, Object material) {
-		addRecipe("pickaxe_" + name, output, "###", " s ", " s ", 's', Items.STICK, '#', material);
-	}
-
-	/**
-	 * ショベルレシピの登録 名前の前に"shovel_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param output
-	 * @param material
-	 */
-	public void addRecipeShovel(String name, ItemStack output, Object material) {
-		addRecipe("shovel_" + name, output, "#", "s", "s", 's', Items.STICK, '#', material);
-	}
-
-	/**
-	 * ツール3種レシピの一括登録（斧、つるはし、ショベル） 名前の前にそれぞれ"axe_"、"pickaxe_"、"shovel_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public void addRecipeTools(String name, Object material, ItemStack... output) {
-		assert (output.length == 3) : "完成品リストのサイズは3である必要があります";
-		addRecipeAxe(name, output[0], material);
-		addRecipePickaxe(name, output[1], material);
-		addRecipeShovel(name, output[2], material);
-	}
-
-	/**
-	 * 剣レシピの登録 名前の前に"sword_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param name
-	 * @param output
-	 * @param material
-	 */
-	public void addRecipeSword(String name, ItemStack output, Object material) {
-		addRecipe("sword_" + name, output, "#", "#", "s", 's', Items.STICK, '#', material);
-	}
-
-	/**
-	 * 防具4種レシピの一括登録（ヘルメット、チェストプレート、レギンス、ブーツ）
-	 * 名前の前にそれぞれ"helmet_"、"chestplate_"、"leggings_"、"boots_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public void addRecipeArmor(String name, Object material, ItemStack... output) {
-		assert (output.length == 4) : "完成品リストのサイズは4である必要があります";
-		addRecipe("helmet_" + name, output[0], "###", "# #", '#', material);
-		addRecipe("chestplate_" + name, output[1], "# #", "###", "###", '#', material);
-		addRecipe("leggings_" + name, output[2], "###", "# #", "# #", '#', material);
-		addRecipe("boots_" + name, output[3], "# #", "# #", '#', material);
-	}
-
-	/**
-	 * ツール3種、剣、防具4種レシピの一括登録
-	 * 名前の前にそれぞれ"axe_"、"pickaxe_"、"shovel_"、"sword_"、"helmet_"、"chestplate_"、"leggings_"、"boots_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public void addRecipeAllToolsAndArmor(String name, Object material, ItemStack... output) {
-		assert (output.length == 8) : "完成品リストのサイズは8である必要があります";
-		addRecipeTools(name, material, Arrays.copyOfRange(output, 0, 2));
-		addRecipeSword(name, output[3], material);
-		addRecipeArmor(name, material, Arrays.copyOfRange(output, 4, 8));
-	}
-
-	/**
-	 * 階段レシピ登録 名前の前に"stairs_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public void addRecipeStairs(String name, Block output, Object material) {
-		int quantity = 4;
-		if (ModCompat.COMPAT_QUARK) {
-			quantity = 8;
-			PolishedLib.LOGGER.info("Quark is loaded.");
-		}
-
-		addRecipe("stairs_" + name, new ItemStack(output, quantity), "#  ", "## ", "###", '#', material);
-	}
-
-	/**
-	 * 階段を手元で作れるようにレシピ登録 名前の前に"stairs_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param material
-	 * @param output
-	 */
-	public void addMiniRecipeStairs(String name, Block output, Object material) {
-		int quantity = 2;
-		if (ModCompat.COMPAT_QUARK) {
-			quantity = 4;
-			PolishedLib.LOGGER.info("Quark is loaded.");
-		}
-
-		addRecipe("stairs_" + name, new ItemStack(output, quantity), "# ", "##", '#', material);
-	}
-
-	/**
-	 * 壁のレシピ登録 名前の前に"wall_"と足される
-	 * 鉱石辞書名にも対応
-	 *
-	 * @param name
-	 * @param output
-	 * @param material
-	 */
-	public void addRecipeWall(String name, Block output, Object material) {
-		addRecipe("wall_" + name, new ItemStack(output, 6), "MMM", "MMM", 'M', material);
-	}
-
-	/**
-	 * レシピ削除
-	 *
-	 * @param output
-	 */
-	public static void removeRecipe(ItemStack output) {
-		Iterator<IRecipe> remover = ForgeRegistries.RECIPES.iterator();
-
-		while (remover.hasNext()) {
-			ItemStack itemStack = remover.next().getRecipeOutput();
-
-			if (itemStack != null && output.isItemEqual(itemStack))
-				remover.remove();
-		}
-	}
-
-	// TODO 精錬レシピ削除
-	/**
-	 * 精錬レシピの限定的な削除
-	 *
-	 * @param input
-	 * @param output
-	 */
-	public static void removeSmeltingRecipe(ItemStack input, ItemStack output) {
-		Map<ItemStack, ItemStack> remover = FurnaceRecipes.instance().getSmeltingList();
-		remover.remove(input, output);
-	}
-
-	public static void removeSmeltingRecipe(ItemStack output) {
-		Map<ItemStack, ItemStack> remover = FurnaceRecipes.instance().getSmeltingList();
-
-		// for(Entry<ItemStack, ItemStack> entry : remover.entrySet())
-		// {
-		// if(output.isItemEqual((ItemStack) entry.getValue()))
-		// {
-		// remover.remove((ItemStack) entry.getKey(), (ItemStack)
-		// entry.getValue());
-		// }
-		// }
-
-		remover.entrySet().stream().filter(entry -> output.isItemEqual((ItemStack) entry.getValue()))
-				.forEach(entry -> remover.remove((ItemStack) entry.getKey(), (ItemStack) entry.getValue()));
-	}
-
-	/**
-	 * 燃料登録を簡単に見やすく
-	 *
-	 * @param burnTime
-	 * @param fuels
-	 */
-	public static void addFuel(int burnTime, ItemStack... fuels) {
-		GameRegistry.registerFuelHandler(fuel -> {
-			for (ItemStack toAdd : fuels) {
-				if (fuel.isItemEqual(toAdd))
-					return burnTime;
-			}
-
-			return 0;
-		});
-	}
-
-	/**
-	 * ブロック登録
-	 *
-	 * @param block
-	 * @param name
-	 */
-	public void registerBlock(Block block, String name) {
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
-		ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-
-		if (Utils.isClient())
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
-	}
-
-	/**
-	 * ブロック登録
-	 * アイテムブロックを別に作成時用
-	 *
-	 * @param block
-	 * @param itemBlock
-	 * @param name
-	 */
-	public void registerBlock(Block block, ItemBlock itemBlock, String name) {
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
-		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
-
-		if (Utils.isClient())
-			ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
-	}
-
-	/**
-	 * ブロック登録
-	 * stateを無視する処理を入れるかどうか
-	 *
-	 * @param block
-	 * @param itemBlock
-	 * @param name
-	 * @param meta
-	 * @param namingFunc
-	 * @param ignoreState
-	 */
-	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc, IStateMapper mapper) {
-		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
-		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
-
-		if (Utils.isClient()) {
-			ModelLoader.setCustomStateMapper(block, mapper);
-			for (int i = 0; i < meta; i ++)
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(namingFunc.apply(i, block.getRegistryName().toString()), "inventory"));
-		}
-	}
-
-	/**
-	 * ブロック登録
-	 * Functionで添字iに対応する文字列を返す
-	 *
-	 * @param block
-	 * @param itemBlock
-	 * @param name
-	 * @param meta
-	 * @param namingFunc
-	 */
-	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc) {
-		registerBlock(block, itemBlock, name, meta, namingFunc, new StateMap.Builder().build());
-	}
-
-	/**
-	 * ブロック登録
-	 * meta違いで名前も変えたいとき用
-	 *
-	 * @param block
-	 * @param itemBlock
-	 * @param location
-	 * @param names
-	 */
-	public void registerBlock(Block block, ItemBlock itemBlock, String name, String[] names) {
-		registerBlock(block, itemBlock, name, names.length, (i, base) -> base + "_" + names[i]);
-	}
-
-	/**
-	 * ブロック登録
-	 * meta違いで数字で違う名前にする用
-	 *
-	 * @param block
-	 * @param itemBlock
-	 * @param location
-	 * @param meta
-	 */
-	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta) {
-		registerBlock(block, itemBlock, name, meta, (i, base) -> base + "_" + i);
-	}
-
-	/**
-	 * ブロック登録
-	 * stateごとにmodelを変えたくないやつよう
-	 * 変えたくないpropをignoreする
-	 *
-	 * @param block
-	 * @param itemBlock
-	 * @param name
-	 * @param meta
-	 * @param ignoreState
-	 */
-	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, IStateMapper mapper) {
-		registerBlock(block, itemBlock, name, meta, (i, base) -> base, mapper);
-	}
-
-	/**
-	 * ノーマルアイテム登録
-	 *
-	 * @param item
-	 * @param name
-	 */
-	public void registerItem(Item item, String name) {
-		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
-
-		if (Utils.isClient())
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-	}
-
-	/**
-	 * アイテム登録
-	 * Functionで添字iに対応する文字列を返す
-	 *
-	 * @param item
-	 * @param name
-	 * @param meta
-	 * @param namingFunc
-	 */
-	public void registerItem(Item item, String name, int meta, BiFunction<Integer, String, String> namingFunc) {
-		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
-
-		if (Utils.isClient()) {
-			for (int i = 0; i < meta; i ++)
-				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(namingFunc.apply(i, item.getRegistryName().toString()), "inventory"));
-		}
-	}
-
-	/**
-	 * アイテム登録
-	 * meta違いでテクスチャを変える用
-	 *
-	 * @param item
-	 * @param location
-	 * @param names
-	 */
-	public void registerItem(Item item, String name, String[] names) {
-		registerItem(item, name, names.length, (i, base) -> base + "_" + names[i]);
-	}
-
-	/**
-	 * アイテム登録
-	 *  meta違いだけど同じテクスチャ用
-	 *
-	 * @param item
-	 * @param name
-	 * @param meta
-	 */
-	public void registerItem(Item item, String name, int meta) {
-		registerItem(item, name, meta, (i, base) -> base);
-	}
+	//	/**
+	//	 * ブロック登録
+	//	 *
+	//	 * @param block
+	//	 * @param name
+	//	 */
+	//	public void registerBlock(Block block, String name) {
+	//		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
+	//		ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+	//
+	//		if (Utils.isClient())
+	//			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+	//	}
+	//
+	//	/**
+	//	 * ブロック登録
+	//	 * アイテムブロックを別に作成時用
+	//	 *
+	//	 * @param block
+	//	 * @param itemBlock
+	//	 * @param name
+	//	 */
+	//	public void registerBlock(Block block, ItemBlock itemBlock, String name) {
+	//		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
+	//		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
+	//
+	//		if (Utils.isClient())
+	//			ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+	//	}
+	//
+	//	/**
+	//	 * ブロック登録
+	//	 * stateを無視する処理を入れるかどうか
+	//	 *
+	//	 * @param block
+	//	 * @param itemBlock
+	//	 * @param name
+	//	 * @param meta
+	//	 * @param namingFunc
+	//	 * @param ignoreState
+	//	 */
+	//	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc, IStateMapper mapper) {
+	//		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
+	//		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
+	//
+	//		if (Utils.isClient()) {
+	//			ModelLoader.setCustomStateMapper(block, mapper);
+	//			for (int i = 0; i < meta; i ++)
+	//				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(namingFunc.apply(i, block.getRegistryName().toString()), "inventory"));
+	//		}
+	//	}
+	//	//
+	//	//	/**
+	//	//	 * ブロック登録
+	//	//	 * Functionで添字iに対応する文字列を返す
+	//	//	 *
+	//	//	 * @param block
+	//	//	 * @param itemBlock
+	//	//	 * @param name
+	//	//	 * @param meta
+	//	//	 * @param namingFunc
+	//	//	 */
+	//	//	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc) {
+	//	//		registerBlock(block, itemBlock, name, meta, namingFunc, new StateMap.Builder().build());
+	//	//	}
+	//
+	//	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, BiFunction<Integer, String, String> namingFunc) {
+	//		ForgeRegistries.BLOCKS.register(block.setRegistryName(Utils.makeModLocation(this.modId, name)));
+	//		ForgeRegistries.ITEMS.register(itemBlock.setRegistryName(block.getRegistryName()));
+	//
+	//		if (Utils.isClient()) {
+	//			for (int i = 0; i < meta; i ++)
+	//				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(namingFunc.apply(i, block.getRegistryName().toString()), "inventory"));
+	//		}
+	//	}
+	//
+	//	/**
+	//	 * ブロック登録
+	//	 * meta違いで名前も変えたいとき用
+	//	 *
+	//	 * @param block
+	//	 * @param itemBlock
+	//	 * @param location
+	//	 * @param names
+	//	 */
+	//	public void registerBlock(Block block, ItemBlock itemBlock, String name, String[] names) {
+	//		registerBlock(block, itemBlock, name, names.length, (i, base) -> base + "_" + names[i]);
+	//	}
+	//
+	//	/**
+	//	 * ブロック登録
+	//	 * meta違いで数字で違う名前にする用
+	//	 *
+	//	 * @param block
+	//	 * @param itemBlock
+	//	 * @param location
+	//	 * @param meta
+	//	 */
+	//	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta) {
+	//		registerBlock(block, itemBlock, name, meta, (i, base) -> base + "_" + i);
+	//	}
+	//
+	//	/**
+	//	 * ブロック登録
+	//	 * stateごとにmodelを変えたくないやつよう
+	//	 * 変えたくないpropをignoreする
+	//	 *
+	//	 * @param block
+	//	 * @param itemBlock
+	//	 * @param name
+	//	 * @param meta
+	//	 * @param ignoreState
+	//	 */
+	//	//	public void registerBlock(Block block, ItemBlock itemBlock, String name, int meta, IStateMapper mapper) {
+	//	//		registerBlock(block, itemBlock, name, meta, (i, base) -> base, mapper);
+	//	//	}
+	//
+	//	/**
+	//	 * ノーマルアイテム登録
+	//	 *
+	//	 * @param item
+	//	 * @param name
+	//	 */
+	//	public void registerItem(Item item, String name) {
+	//		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
+	//
+	//		if (Utils.isClient())
+	//			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+	//	}
+	//
+	//	/**
+	//	 * アイテム登録
+	//	 * Functionで添字iに対応する文字列を返す
+	//	 *
+	//	 * @param item
+	//	 * @param name
+	//	 * @param meta
+	//	 * @param namingFunc
+	//	 */
+	//	public void registerItem(Item item, String name, int meta, BiFunction<Integer, String, String> namingFunc) {
+	//		ForgeRegistries.ITEMS.register(item.setRegistryName(Utils.makeModLocation(this.modId, name)));
+	//
+	//		if (Utils.isClient()) {
+	//			for (int i = 0; i < meta; i ++)
+	//				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(namingFunc.apply(i, item.getRegistryName().toString()), "inventory"));
+	//		}
+	//	}
+	//
+	//	/**
+	//	 * アイテム登録
+	//	 * meta違いでテクスチャを変える用
+	//	 *
+	//	 * @param item
+	//	 * @param location
+	//	 * @param names
+	//	 */
+	//	public void registerItem(Item item, String name, String[] names) {
+	//		registerItem(item, name, names.length, (i, base) -> base + "_" + names[i]);
+	//	}
+	//
+	//	/**
+	//	 * アイテム登録
+	//	 *  meta違いだけど同じテクスチャ用
+	//	 *
+	//	 * @param item
+	//	 * @param name
+	//	 * @param meta
+	//	 */
+	//	public void registerItem(Item item, String name, int meta) {
+	//		registerItem(item, name, meta, (i, base) -> base);
+	//	}
 
 	/**
 	 * デフォルトの登録処理を簡略化
@@ -478,8 +202,8 @@ public class RegistryUtils {
 	 * @param updateFrequency
 	 * @param sendsVelocityUpdates
 	 */
-	public void registerModEntity(Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates) {
-		EntityRegistry.registerModEntity(Utils.makeModLocation(this.modId, entityName), entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
+	public static void registerModEntity(Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates) {
+		EntityRegistry.registerModEntity(GameData.checkPrefix(entityName), entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
 	}
 
 	/**
@@ -538,42 +262,6 @@ public class RegistryUtils {
 	 */
 	public static void registerSubItems(Item item, int meta, CreativeTabs tab, NonNullList<ItemStack> items) {
 		registerSubItems(item, 0, meta, tab, items);
-	}
-
-	/**
-	 * IBlockColorを実装しているブロック登録
-	 *
-	 * @param blockColor
-	 * @param blocks
-	 */
-	@SideOnly(Side.CLIENT)
-	public static void registerBlockColor(IBlockColor blockColor, Block... blocks) {
-		if (Utils.isClient())
-			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(blockColor, blocks);
-	}
-
-	/**
-	 * IItemColorを実装しているアイテム登録
-	 *
-	 * @param itemColor
-	 * @param items
-	 */
-	@SideOnly(Side.CLIENT)
-	public static void registerItemColor(IItemColor itemColor, Item... items) {
-		if (Utils.isClient())
-			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(itemColor, items);
-	}
-
-	/**
-	 * IItemColorを実装しているアイテムブロック登録
-	 *
-	 * @param itemColor
-	 * @param blocks
-	 */
-	@SideOnly(Side.CLIENT)
-	public static void registerItemBlockColor(IItemColor itemColor, Block... blocks) {
-		if (Utils.isClient())
-			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(itemColor, blocks);
 	}
 
 	/**
