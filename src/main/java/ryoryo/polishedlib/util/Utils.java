@@ -962,15 +962,16 @@ public class Utils {
 	}
 
 	/**
-	 * iがaからbの(a,bを含む)範囲に入っているか a <= i <= b
+	 * iがxからyの(x, yを含む)範囲に入っているか
+	 *  x <= i <= y
 	 *
 	 * @param i
-	 * @param a
-	 * @param b
+	 * @param x
+	 * @param y
 	 * @return
 	 */
-	public static boolean isInAToB(int i, int a, int b) {
-		return a <= i && i <= b;
+	public static boolean isBetweenXAndY(int i, int x, int y) {
+		return x <= i && i <= y;
 	}
 
 	/**
