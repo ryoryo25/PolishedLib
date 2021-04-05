@@ -6,6 +6,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -15,16 +16,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class BlockBaseMeta extends BlockBase {
-	public BlockBaseMeta(Material material, String name) {
-		super(material, name);
+	public BlockBaseMeta(String name, Material material) {
+		super(name, material);
 	}
 
-	public BlockBaseMeta(Material material, String name, CreativeTabs tab) {
-		super(material, name, tab);
+	public BlockBaseMeta(String name, Material material, CreativeTabs tab) {
+		super(name, material, tab);
 	}
 
-	public BlockBaseMeta(Material material, String name, CreativeTabs tab, SoundType soundType) {
-		super(material, name, tab, soundType);
+	public BlockBaseMeta(String name, Material material, CreativeTabs tab, SoundType soundType) {
+		super(name, material, tab, soundType);
 	}
 
 	@Override
@@ -45,4 +46,10 @@ public abstract class BlockBaseMeta extends BlockBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public abstract void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list);
+
+	@Override
+	public abstract ItemBlock createItemBlock();
+
+	@Override
+	public abstract void registerModels();
 }

@@ -7,22 +7,32 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import ryoryo.polishedlib.util.handlers.ModelHandler;
+import ryoryo.polishedlib.util.handlers.RegistryHandler;
+import ryoryo.polishedlib.util.interfaces.IGetItemBlock;
+import ryoryo.polishedlib.util.interfaces.IModelRegister;
 
-public class BlockBaseWall extends BlockWall {
-	public BlockBaseWall(Block baseBlock) {
+public class BlockBaseWall extends BlockWall implements IModelRegister, IGetItemBlock {
+
+	public BlockBaseWall(String name, Block baseBlock) {
 		super(baseBlock);
-		this.setUnlocalizedName(baseBlock.getUnlocalizedName().substring(5) + "_wall");
+		String wallName = name + "_wall";
+		this.setUnlocalizedName(wallName);
+		this.setRegistryName(wallName);
+
+		RegistryHandler.register(this);
+		RegistryHandler.register(createItemBlock().setRegistryName(wallName));
 	}
 
-	public BlockBaseWall(Block baseBlock, String name) {
-		super(baseBlock);
-		this.setUnlocalizedName(name + "_wall");
+	public BlockBaseWall(Block baseBlock) {
+		this(baseBlock.getUnlocalizedName().substring("tile.".length()), baseBlock);
 	}
 
 	private boolean canConnectTo(IBlockAccess world, BlockPos pos) {
@@ -44,5 +54,15 @@ public class BlockBaseWall extends BlockWall {
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
 		list.add(new ItemStack(this, 1, 0));
+	}
+
+	@Override
+	public ItemBlock createItemBlock() {
+		return new ItemBlock(this);
+	}
+
+	@Override
+	public void registerModels() {
+		ModelHandler.registerBlockModel(this);
 	}
 }
