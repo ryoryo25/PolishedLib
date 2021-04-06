@@ -962,6 +962,17 @@ public class Utils {
 	}
 
 	/**
+	 * stackにkeyのTagCompoundがあるかどうか判定
+	 *
+	 * @param stack
+	 * @param key
+	 * @return
+	 */
+	public static boolean hasTagCompound(ItemStack stack, String key) {
+		return stack.hasTagCompound() && stack.getTagCompound().hasKey(key);
+	}
+
+	/**
 	 * iがxからyの(x, yを含む)範囲に入っているか
 	 *  x <= i <= y
 	 *
