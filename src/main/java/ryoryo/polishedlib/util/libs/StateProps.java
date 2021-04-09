@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing.Axis;
 import ryoryo.polishedlib.util.enums.EnumColor;
 import ryoryo.polishedlib.util.enums.EnumSimpleFacing;
 
-public class Props {
+public class StateProps {
 	// Properties
 	public static final PropertyBool NORTH = PropertyBool.create("north");
 	public static final PropertyBool SOUTH = PropertyBool.create("south");
