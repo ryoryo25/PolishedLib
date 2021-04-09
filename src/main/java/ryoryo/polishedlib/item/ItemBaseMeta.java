@@ -1,6 +1,10 @@
 package ryoryo.polishedlib.item;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ItemBaseMeta extends ItemBase {
 
@@ -14,14 +18,28 @@ public abstract class ItemBaseMeta extends ItemBase {
 		this.setCreativeTab(tab);
 	}
 
-	//	@Override
-	//	public abstract String getUnlocalizedName(ItemStack stack);
-	//
-	//	@Override
-	//	@SideOnly(Side.CLIENT)
-	//	public abstract void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items);
-	//
-	//	@Override
-	//	@SideOnly(Side.CLIENT)
-	//	public abstract void registerModels();
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return this.getUnlocalizedNameImpl(stack);
+	}
+
+	protected abstract String getUnlocalizedNameImpl(ItemStack stack);
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+		this.getSubItemsImpl(tab, items);
+	}
+
+	@SideOnly(Side.CLIENT)
+	protected abstract void getSubItemsImpl(CreativeTabs tab, NonNullList<ItemStack> items);
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+		this.registerModelsImpl();
+	}
+
+	@SideOnly(Side.CLIENT)
+	protected abstract void registerModelsImpl();
 }
